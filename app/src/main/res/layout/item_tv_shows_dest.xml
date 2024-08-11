@@ -10,15 +10,15 @@
     android:layout_marginEnd="@dimen/material_margin_super_small"
     android:layout_marginBottom="@dimen/material_margin_normal"
     android:orientation="vertical"
-    tools:background="@color/white"
+    tools:background="@color/mainTVShowDestBackground"
     tools:ignore="RtlHardcoded">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_preview"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/material_margin_normal"
+        android:layout_marginEnd="@dimen/material_margin_normal"
         android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
@@ -35,9 +35,9 @@
             android:layout_width="@dimen/movie_card_text_width"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="27dp"
+            android:layout_marginStart="@dimen/material_margin_normal_X"
             android:layout_marginTop="@dimen/material_margin_super_small"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="@dimen/material_margin_small_X"
             android:layout_toStartOf="@+id/movie_rating"
             android:ellipsize="end"
             android:maxLines="2"
@@ -45,7 +45,7 @@
             android:textSize="18sp"
             android:fontFamily="@font/mulish_regular"
             tools:text="Мир дикого запада"
-            tools:textColor="@color/black" />
+            tools:textColor="@color/white" />
 
         <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/movie_rating"
@@ -53,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="27dp"
+            android:layout_marginTop="@dimen/material_margin_small_XX"
+            android:layout_marginEnd="@dimen/material_margin_normal_X"
             android:isIndicator="true"
             android:numStars="5"
             android:progressBackgroundTint="@color/colorControlNormal"
