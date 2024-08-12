@@ -5,7 +5,7 @@ import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.ShowDest
 import ru.androidschool.intensiv.databinding.ItemTvShowsDestBinding
-import ru.androidschool.intensiv.extensions.imageExt
+import ru.androidschool.intensiv.extensions.loadImageByUrl
 
 class TvShowDestItem(
     private val content: ShowDest,
@@ -20,7 +20,7 @@ class TvShowDestItem(
         view.content.setOnClickListener {
             onClick.invoke(content)
         }
-        view.imagePreview.imageExt("https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_.jpg")
+        view.imagePreview.loadImageByUrl("https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_.jpg")
     }
 
     override fun initializeViewBinding(v: View) = ItemTvShowsDestBinding.bind(v)

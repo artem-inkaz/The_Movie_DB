@@ -5,6 +5,7 @@
     <dimen name="material_margin_small_X">12dp</dimen>
     <dimen name="material_margin_small_XX">10.38dp</dimen>
     <dimen name="material_margin_small">8dp</dimen>
+    <dimen name="material_margin_super_small_X">7dp</dimen>
     <dimen name="material_margin_super_small">4dp</dimen>
 
 
