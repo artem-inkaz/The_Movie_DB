@@ -1,14 +1,10 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.view.View
-import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Movie
 import ru.androidschool.intensiv.data.ShowDest
 import ru.androidschool.intensiv.databinding.ItemTvShowsDestBinding
-import ru.androidschool.intensiv.databinding.ItemWithTextBinding
-import ru.androidschool.intensiv.extensions.ImageExt
 import ru.androidschool.intensiv.extensions.imageExt
 
 class TvShowDestItem(

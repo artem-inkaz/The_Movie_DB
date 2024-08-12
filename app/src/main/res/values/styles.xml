@@ -21,5 +21,10 @@
         <item name="cornerSize">10%</item>
     </style>
 
-
+    <style name="text_view_description_style">
+        <item name="android:layout_toStartOf">@+id/movie_rating</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

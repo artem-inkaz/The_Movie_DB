@@ -32,16 +32,13 @@
 
         <TextView
             android:id="@+id/description"
+            style="@style/text_view_description_style"
             android:layout_width="@dimen/movie_card_text_width"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/material_margin_normal_X"
             android:layout_marginTop="@dimen/material_margin_super_small"
             android:layout_marginEnd="@dimen/material_margin_small_X"
-            android:layout_toStartOf="@+id/movie_rating"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/black"
             android:textSize="18sp"
             android:fontFamily="@font/mulish_regular"
             tools:text="Мир дикого запада"
