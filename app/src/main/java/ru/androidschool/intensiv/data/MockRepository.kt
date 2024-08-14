@@ -2,13 +2,15 @@ package ru.androidschool.intensiv.data
 
 object MockRepository {
 
-    fun getMovies(): List<Movie> {
+    fun getMovies(): List<MovieLocal> {
 
-        val moviesList = mutableListOf<Movie>()
+        val moviesList = mutableListOf<MovieLocal>()
         for (x in 0..10) {
-            val movie = Movie(
+            val movie = MovieLocal(
                 title = "Spider-Man $x",
-                voteAverage = 10.0 - x
+                voteAverage = 10.0 - x,
+                posterPath = "",
+                backdropPath = ""
             )
             moviesList.add(movie)
         }
