@@ -1,4 +1,6 @@
-package ru.androidschool.intensiv.data
+package ru.androidschool.intensiv.data.mock
+
+import ru.androidschool.intensiv.data.MovieLocal
 
 object MockRepository {
 
@@ -7,7 +9,9 @@ object MockRepository {
         val moviesList = mutableListOf<MovieLocal>()
         for (x in 0..10) {
             val movie = MovieLocal(
+                id = x,
                 title = "Spider-Man $x",
+                overview = "",
                 voteAverage = 10.0 - x,
                 posterPath = "",
                 backdropPath = ""
@@ -16,20 +20,5 @@ object MockRepository {
         }
 
         return moviesList
-    }
-
-    fun getShowDest(): List<ShowDest> {
-
-        val showDestList = mutableListOf<ShowDest>()
-        for (x in 0..10) {
-            val showDest = ShowDest(
-                title = "Spiderman: No Way\n" +
-                        "Home $x",
-                voteAverage = 10.0 - x
-            )
-            showDestList.add(showDest)
-        }
-
-        return showDestList
     }
 }

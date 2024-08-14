@@ -43,15 +43,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val showDestList =
-//            MockRepository.getShowDest().map {
-//                TvShowDestItem(it) { movie ->
-//                    openShowDest(
-//                        movie
-//                    )
-//                }
-//            }.toList()
-
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
         getPopularTvShows.enqueue(object : retrofit2.Callback<TvShowsResponse> {
             override fun onResponse(
@@ -67,15 +58,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                         }
                     }?.toList()
 
-//                val popularMoviesGroupList =
-//                    moviesList?.let {
-//                        MainCardContainer(
-//                            title = R.string.popular,
-//                            items = it
-//                        )
-//                    }
-//                popularMoviesGroupList?.let { moviesGroupList.add(it) }
-
                 binding.moviesRecyclerView.adapter = adapter.apply {
                     if (tvShowsList != null) {
                         addAll(tvShowsList)
@@ -87,8 +69,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                 Timber.tag(TAG).e(t.toString())
             }
         })
-
-//        binding.moviesRecyclerView.adapter = adapter.apply { addAll(showDestList) }
     }
 
     private fun openShowDest(showDest: TvShowsLocal) {

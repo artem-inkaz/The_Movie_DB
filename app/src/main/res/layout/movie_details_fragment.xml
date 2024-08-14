@@ -1,12 +1,121 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blueDark"
+    android:overScrollMode="never"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        tools:background="@color/blueDark"
+        tools:ignore="RtlHardcoded">
 
-</FrameLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="280dp">
+            <ImageView
+                android:id="@+id/move_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_avatar" />
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/material_margin_normal_XL"
+                android:layout_marginStart="@dimen/material_margin_normal_XL"
+                android:src="@drawable/path"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_margin_normal_XL"
+            android:layout_marginTop="@dimen/material_margin_normal_XL"
+            android:layout_marginEnd="@dimen/material_margin_normal_XL"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/title"
+                style="@style/text_view_description_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/material_margin_small_X"
+                android:fontFamily="@font/mulish_regular"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                tools:text="Мир дикого запада"
+                android:textColor="@color/white" />
+            <ImageView
+                android:id="@+id/movie_favourite"
+                android:layout_width="@dimen/dimens_32"
+                android:layout_height="@dimen/dimens_32"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/material_margin_normal"
+                android:src="@drawable/favorite_border_24"
+                app:tint="@color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_margin_normal_XL"
+            android:layout_marginTop="@dimen/material_margin_normal"
+            android:layout_marginEnd="@dimen/material_margin_normal_XL"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/move_show"
+                style="@style/text_view_description_style"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/material_margin_super_small"
+                android:layout_marginEnd="@dimen/material_margin_small_X"
+                android:background="@drawable/button_shape"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:text="Смотреть"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatRatingBar
+                android:id="@+id/movie_rating"
+                style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/material_margin_small_XX"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressBackgroundTint="@color/colorControlNormal"
+                android:stepSize="0.5"
+                tools:rating="5" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/move_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/material_margin_normal_XL"
+            android:layout_marginTop="@dimen/material_margin_normal_XL"
+            android:layout_marginEnd="@dimen/material_margin_normal_XL"
+            android:fontFamily="@font/mulish_regular"
+            android:text="With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man."
+            android:textColor="@color/textColorGrey"
+            android:textSize="18sp" />
+        <include layout="@layout/item_list_actor" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

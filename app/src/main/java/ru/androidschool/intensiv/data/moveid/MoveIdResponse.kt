@@ -27,8 +27,6 @@ data class MoveIdResponse(
     val tagline: String,
     val title: String,
     val video: Boolean,
-    @SerializedName("vote_average")
-    val voteAverage: Double,
     val vote_count: Int
 ){
     @SerializedName("backdrop_path")
@@ -38,4 +36,8 @@ data class MoveIdResponse(
     @SerializedName("poster_path")
     val posterPath: String? = null
         get() = "https://image.tmdb.org/t/p/w300$field"
+
+    @SerializedName("vote_average")
+    val voteAverage: Double = 0.0
+        get() =field.div(2)
 }

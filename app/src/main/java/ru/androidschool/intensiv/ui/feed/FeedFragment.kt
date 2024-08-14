@@ -166,7 +166,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private fun openMovieDetails(movie: MovieLocal) {
         val bundle = Bundle()
-        bundle.putString(KEY_TITLE, movie.title)
+        bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -193,7 +193,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     companion object {
         const val MIN_LENGTH = 3
-        const val KEY_TITLE = "title"
+        const val KEY_MOVIE_ID = "id"
         const val KEY_SEARCH = "search"
         const val TAG = "FeedFragment"
     }
