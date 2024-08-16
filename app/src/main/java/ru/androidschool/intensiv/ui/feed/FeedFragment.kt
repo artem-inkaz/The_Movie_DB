@@ -1,17 +1,24 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import retrofit2.Response
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.MovieLocal
+import ru.androidschool.intensiv.data.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.extensions.getMoviesGroupList
+import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
@@ -51,32 +58,80 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
                 openSearch(it.toString())
             }
         }
+        val moviesGroupList = mutableListOf<MainCardContainer>()
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        val moviesList =
-                MockRepository.getMovies().map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
-                }.toList()
+        val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
+        getNowPlayingMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = getMoviesGroupList(
+                    title = R.string.now_playing,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
 
+            }
 
-        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
+                Timber.tag(TAG).e(t.toString())
+            }
+        })
 
+        val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
+        getUpComingMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = getMoviesGroupList(
+                    title = R.string.upcoming,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
+                Timber.tag(TAG).e(t.toString())
+            }
+        })
+
+        val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
+        getPopularMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MoviesResponse>,
+                response: Response<MoviesResponse>
+            ) {
+                val moviesList = getMoviesGroupList(
+                    title = R.string.popular,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
+
+                binding.moviesRecyclerView.adapter = adapter.apply {
+                    addAll(moviesGroupList)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
+                Timber.tag(TAG).e(t.toString())
+            }
+        })
     }
 
-    private fun openMovieDetails(movie: Movie) {
+    private fun openMovieDetails(movie: MovieLocal) {
         val bundle = Bundle()
-        bundle.putString(KEY_TITLE, movie.title)
+        bundle.putInt(KEY_MOVIE_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -89,6 +144,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onStop() {
         super.onStop()
         searchBinding.searchToolbar.clear()
+        binding.moviesRecyclerView.adapter = adapter.apply {
+            clear()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -103,7 +161,8 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     companion object {
         const val MIN_LENGTH = 3
-        const val KEY_TITLE = "title"
+        const val KEY_MOVIE_ID = "id"
         const val KEY_SEARCH = "search"
+        const val TAG = "FeedFragment"
     }
 }

@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext.kotlinVersion = '1.9.21'
+
     repositories {
         google()
         mavenCentral()
@@ -10,10 +10,14 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jacoco:org.jacoco.core:0.8.11"
+        classpath("org.jetbrains.kotlin:kotlin-serialization:2.0.0")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 
+}
+plugins {
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0' apply false
 }
 
 allprojects {
@@ -55,4 +59,9 @@ ext {
     timberVersion = '5.0.1'
 
     groupieVersion = '2.10.1'
+
+    retrofit = '2.9.0'
+    loggingInterceptor = '4.9.1'
+    kotlinxSerializationJson = '1.6.3'
+    kotlinxSerializationConverter = '1.0.0'
 }

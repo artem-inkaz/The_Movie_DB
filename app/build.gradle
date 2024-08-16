@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlinx-serialization'
 apply from: "../ktlint.gradle"
 
 
@@ -21,14 +21,19 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
+        buildConfigField 'String', 'ACCESS_TOKEN_API', keystoreProperties['ACCESS_TOKEN_API']
     }
     buildTypes {
         debug {
             testCoverageEnabled true
+            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", "BASE_IMAGE_URL", "\"https://image.tmdb.org/t/p/w300\""
         }
         release {
             testCoverageEnabled true
             minifyEnabled false
+            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
+            buildConfigField "String", "BASE_IMAGE_URL", "\"https://image.tmdb.org/t/p/w300\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -86,4 +91,14 @@ dependencies {
     implementation "com.github.lisawray.groupie:groupie-viewbinding:$rootProject.groupieVersion"
 
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.loggingInterceptor"
+
+    //Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$rootProject.kotlinxSerializationJson"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$rootProject.kotlinxSerializationConverter"
+
 }
