@@ -6,9 +6,13 @@ import ru.androidschool.intensiv.data.mappers.MovieMapper
 import ru.androidschool.intensiv.data.movies.Movie
 import ru.androidschool.intensiv.ui.feed.MainCardContainer
 import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.utils.Constants.VOTEAVERAGE
+import java.util.Locale
+
+fun getLanguage()= Locale.getDefault().toLanguageTag()
 
 fun voteAverage(voteAverage: Double): Float {
-    return voteAverage.div(2).toFloat()
+    return voteAverage.div(VOTEAVERAGE).toFloat()
 }
 
 fun getMoviesGroupList(@StringRes title: Int, results: List<Movie>?, openMovieDetails: (MovieLocal) -> Unit): MainCardContainer? {

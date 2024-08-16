@@ -17,7 +17,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="280dp">
+            android:layout_height="@dimen/movie_card_poster_width">
             <ImageView
                 android:id="@+id/move_poster"
                 android:layout_width="match_parent"
@@ -62,8 +62,8 @@
                 android:textColor="@color/white" />
             <CheckBox
                 android:id="@+id/movie_favourite"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/dimens_32"
+                android:layout_height="@dimen/dimens_32"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/material_margin_normal"
                 android:button="@drawable/checkbox_selector"
@@ -82,7 +82,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/move_show"
                 style="@style/text_view_description_style"
-                android:layout_width="170dp"
+                android:layout_width="@dimen/movie_card_height"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="@dimen/material_margin_super_small"
