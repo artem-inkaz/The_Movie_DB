@@ -4,13 +4,17 @@ import ru.androidschool.intensiv.base.MapperDomain
 import ru.androidschool.intensiv.data.TvShowsLocal as OutTvShows
 import ru.androidschool.intensiv.data.tvseries.TvShows as InTvShows
 
-class TvShowsMapper : MapperDomain.ReadOnly<InTvShows, OutTvShows> {
-    override fun toView(data: InTvShows): OutTvShows = with(data) {
-        OutTvShows(
-            name = name,
-            voteAverage = voteAverage,
-            backdropPath = backdropPath,
-            posterPath = posterPath
-        )
+class TvShowsMapper : MapperDomain.ViewObjectMapper<OutTvShows, InTvShows> {
+
+    override fun toViewObject(dto: InTvShows): OutTvShows = with(dto) {
+        return OutTvShows(
+                name = name,
+                voteAverage = voteAverage,
+                backdropPath = backdropPath,
+                posterPath = posterPath
+            )
     }
+
+    override fun toViewObject(dto: Collection<InTvShows>): List<OutTvShows> =
+        dto.map { toViewObject(it) }
 }

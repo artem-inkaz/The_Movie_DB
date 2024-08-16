@@ -14,10 +14,10 @@ import com.xwray.groupie.GroupieViewHolder
 import retrofit2.Response
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
-import ru.androidschool.intensiv.data.mappers.MovieMapper
 import ru.androidschool.intensiv.data.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.extensions.getMoviesGroupList
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
@@ -64,7 +64,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 openSearch(it.toString())
             }
         }
-
         val moviesGroupList = mutableListOf<MainCardContainer>()
 
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
@@ -73,24 +72,12 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 call: retrofit2.Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                val moviesList =
-                    response.body()?.results?.map {
-                        MovieItem(MovieMapper().toView(it)) { movie ->
-                            openMovieDetails(
-                                movie
-                            )
-                        }
-                    }?.toList()
-
-                val nowPlayingMoviesGroupList =
-                    moviesList?.let {
-                        MainCardContainer(
-                            title = R.string.now_playing,
-                            items = it
-                        )
-                    }
-
-                nowPlayingMoviesGroupList?.let { moviesGroupList.add(it) }
+                val moviesList = getMoviesGroupList(
+                    title = R.string.now_playing,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
 
             }
 
@@ -105,23 +92,12 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 call: retrofit2.Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                val moviesList =
-                    response.body()?.results?.map {
-                        MovieItem(MovieMapper().toView(it)) { movie ->
-                            openMovieDetails(
-                                movie
-                            )
-                        }
-                    }?.toList()
-
-                val upComingMoviesGroupList =
-                    moviesList?.let {
-                        MainCardContainer(
-                            title = R.string.upcoming,
-                            items = it
-                        )
-                    }
-                upComingMoviesGroupList?.let { moviesGroupList.add(it) }
+                val moviesList = getMoviesGroupList(
+                    title = R.string.upcoming,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
             }
 
             override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
@@ -135,23 +111,12 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 call: retrofit2.Call<MoviesResponse>,
                 response: Response<MoviesResponse>
             ) {
-                val moviesList =
-                    response.body()?.results?.map {
-                        MovieItem(MovieMapper().toView(it)) { movie ->
-                            openMovieDetails(
-                                movie
-                            )
-                        }
-                    }?.toList()
-
-                val popularMoviesGroupList =
-                    moviesList?.let {
-                        MainCardContainer(
-                            title = R.string.popular,
-                            items = it
-                        )
-                    }
-                popularMoviesGroupList?.let { moviesGroupList.add(it) }
+                val moviesList = getMoviesGroupList(
+                    title = R.string.popular,
+                    results = response.body()?.results,
+                    openMovieDetails = { openMovieDetails(it) }
+                )
+                moviesList?.let { moviesGroupList.add(it) }
 
                 binding.moviesRecyclerView.adapter = adapter.apply {
                     addAll(moviesGroupList)
@@ -179,6 +144,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onStop() {
         super.onStop()
         searchBinding.searchToolbar.clear()
+        binding.moviesRecyclerView.adapter = adapter.apply {
+            clear()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

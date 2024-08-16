@@ -51,7 +51,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
             ) {
                 val tvShowsList =
                     response.body()?.results?.map {
-                        TvShowDestItem(TvShowsMapper().toView(it)) { tvShows ->
+                        TvShowDestItem(TvShowsMapper().toViewObject(it)) { tvShows ->
                             openShowDest(
                                 tvShows
                             )

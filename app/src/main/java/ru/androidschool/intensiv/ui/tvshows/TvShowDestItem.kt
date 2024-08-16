@@ -6,6 +6,7 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.databinding.ItemTvShowsDestBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
+import ru.androidschool.intensiv.extensions.voteAverage
 
 class TvShowDestItem(
     private val content: TvShowsLocal,
@@ -16,7 +17,7 @@ class TvShowDestItem(
 
     override fun bind(view: ItemTvShowsDestBinding, position: Int) {
         view.description.text = content.name
-        view.movieRating.rating = content.rating
+        view.movieRating.rating = voteAverage(content.voteAverage)
         view.content.setOnClickListener {
             onClick.invoke(content)
         }

@@ -52,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/movie_favourite"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/material_margin_small_X"
                 android:fontFamily="@font/mulish_regular"
@@ -59,13 +60,14 @@
                 android:textStyle="bold"
                 tools:text="Мир дикого запада"
                 android:textColor="@color/white" />
-            <ImageView
+            <CheckBox
                 android:id="@+id/movie_favourite"
-                android:layout_width="@dimen/dimens_32"
-                android:layout_height="@dimen/dimens_32"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/material_margin_normal"
-                android:src="@drawable/favorite_border_24"
+                android:button="@drawable/checkbox_selector"
+                android:backgroundTintMode="screen"
                 app:tint="@color/white" />
         </RelativeLayout>
 

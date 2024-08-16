@@ -6,6 +6,7 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
+import ru.androidschool.intensiv.extensions.voteAverage
 
 class MovieItem(
     private val content: MovieLocal,
@@ -16,7 +17,7 @@ class MovieItem(
 
     override fun bind(view: ItemWithTextBinding, position: Int) {
         view.description.text = content.title
-        view.movieRating.rating = content.rating
+        view.movieRating.rating = voteAverage(content.voteAverage)
         view.content.setOnClickListener {
             onClick.invoke(content)
         }

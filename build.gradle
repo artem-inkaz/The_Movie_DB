@@ -59,4 +59,9 @@ ext {
     timberVersion = '5.0.1'
 
     groupieVersion = '2.10.1'
+
+    retrofit = '2.9.0'
+    loggingInterceptor = '4.9.1'
+    kotlinxSerializationJson = '1.6.3'
+    kotlinxSerializationConverter = '1.0.0'
 }

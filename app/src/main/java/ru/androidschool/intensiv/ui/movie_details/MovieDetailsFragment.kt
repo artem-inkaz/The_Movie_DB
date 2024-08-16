@@ -10,12 +10,13 @@ import ru.androidschool.intensiv.data.moveid.MoveIdResponse
 import ru.androidschool.intensiv.data.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
+import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import timber.log.Timber
 import kotlin.properties.Delegates
 
-class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>(){
+class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     // Для загрузки из MovieList
     private var movieBundle by Delegates.notNull<Int>()
@@ -30,7 +31,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (arguments?.getInt(KEY_MOVIE_ID) != null) {
+         arguments?.getInt(KEY_MOVIE_ID)?.let {
             movieBundle = arguments?.getInt(KEY_MOVIE_ID)!!
             movieBundle.let { movie ->
                 showMovieDetail(movie)
@@ -47,9 +48,9 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>(){
             ) {
 
                 response.body()?.let {
-                        title.text = it.title
-                        movieRating.rating = it.voteAverage.toFloat()
-                        moveDescription.text = it.overview
+                    title.text = it.title
+                    movieRating.rating = voteAverage(it.voteAverage)
+                    moveDescription.text = it.overview
                     it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
                 }
             }

@@ -2,6 +2,7 @@ package ru.androidschool.intensiv.data.tvseries
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import ru.androidschool.intensiv.BuildConfig
 
 @Serializable
 data class TvShows(
@@ -21,9 +22,9 @@ data class TvShows(
 ){
     @SerializedName("backdrop_path")
     val backdropPath: String? = null
-        get() = "https://image.tmdb.org/t/p/w500$field"
+        get() = "${BuildConfig.BASE_IMAGE_URL}${field}"
 
     @SerializedName("poster_path")
     val posterPath: String? = null
-        get() = "https://image.tmdb.org/t/p/w300$field"
+        get() = "${BuildConfig.BASE_IMAGE_URL}${field}"
 }

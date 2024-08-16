@@ -9,10 +9,17 @@ import ru.androidschool.intensiv.BuildConfig
 object MovieApiClient {
     private val client = OkHttpClient.Builder()
         .addInterceptor(AuthMovieApiInterceptor())
-        .addInterceptor(HttpLoggingInterceptor(CustomHttpLogging()).apply {
-            this.level = HttpLoggingInterceptor.Level.BODY
+        .addInterceptor(if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor(CustomHttpLogging()).apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
+        } else {
+            HttpLoggingInterceptor(CustomHttpLogging()).apply {
+                setLevel(HttpLoggingInterceptor.Level.NONE)
+            }
         })
         .build()
+
     val apiClient: MovieApiInterface by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)

@@ -9,41 +9,43 @@ import ru.androidschool.intensiv.data.moveid.MovieId
 import ru.androidschool.intensiv.data.moveidcredits.MoveIdCreditsResponse
 import ru.androidschool.intensiv.data.movies.MoviesResponse
 import ru.androidschool.intensiv.data.tvseries.TvShowsResponse
+import ru.androidschool.utils.Constants.PAGE
+import java.util.Locale
 
 interface MovieApiInterface {
     @GET("movie/now_playing")
     fun getNowPlayingMovies(
-        @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1,
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
+        @Query("page") page: Int = PAGE,
     ): Call<MoviesResponse>
 
     @GET("movie/upcoming")
     fun getUpComingMovies(
-        @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1,
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
+        @Query("page") page: Int = PAGE,
     ): Call<MoviesResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
-        @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1,
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
+        @Query("page") page: Int = PAGE,
     ): Call<MoviesResponse>
 
     @GET("tv/popular")
     fun getPopularTvShows(
-        @Query("language") language: String = "en-US",
-        @Query("page") page: Int = 1,
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
+        @Query("page") page: Int = PAGE,
     ): Call<TvShowsResponse>
 
     @GET("movie/{movie_id}")
     fun getMovieDetails(
         @Path("movie_id") id: MovieId,
-        @Query("language") language: String = "en-US",
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
     ): Call<MoveIdResponse>
 
     @GET("movie/{movie_id}/credits")
     fun getMovieIdCredits(
         @Path("movie_id") id: MovieId,
-        @Query("language") language: String = "en-US",
+        @Query("language") language: String = Locale.getDefault().toLanguageTag(),
     ): Call<MoveIdCreditsResponse>
 }
