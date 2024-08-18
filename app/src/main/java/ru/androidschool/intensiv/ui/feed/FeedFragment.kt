@@ -72,7 +72,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         disposables.addAll(
             getNowPlayingMovies
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .subscribe(
                     { result ->
@@ -91,7 +90,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         disposables.addAll(
             getUpComingMovies
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
                         val moviesList = getMoviesGroupList(
