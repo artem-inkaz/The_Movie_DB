@@ -10,10 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.data.mappers.MovieSearchMapper
@@ -26,6 +26,7 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.feed.MovieItem
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
@@ -47,6 +48,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             popExit = R.anim.slide_out_right
         }
     }
+    var movieList: Set<MovieItem> = setOf()
     private var disposables = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,68 +64,122 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         val searchTerm = requireArguments().getString(KEY_SEARCH)
         searchBinding.searchToolbar.setText(searchTerm)
+        start()
         search()
         clear()
     }
 
+    private fun start() {
+        disposables.add(
+            PublishSubject.create(ObservableOnSubscribe<String> { subscriber ->
+                subscriber.onNext(searchBinding.searchToolbar.binding.searchEditText.text.toString())
+            })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .doOnNext {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter { text -> text.isNotBlank() && text.length >= 3 }
+                .map { text -> text.lowercase(Locale.getDefault()).trim() }
+                .distinctUntilChanged()
+                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnEach {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .retry()
+                .subscribe(
+                    { query ->
+                        val findMovies = MovieApiClient.apiClient.findMovies(query)
+                        disposables.add(
+                            findMovies
+                                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { result ->
+                                        Log.d("SSSS", "Error subscribe: ${result.results}")
+                                        movieList =
+                                            result.results.distinct().map {
+                                                MovieItem(MovieSearchMapper().toViewObject(it)) { movie ->
+                                                    openMovieDetails(
+                                                        movie
+                                                    )
+                                                }
+                                            }.toSet()
+                                        Log.d("SSSS", "movieList.size subscribe: ${movieList.size}")
+                                        binding.moviesRecyclerView.adapter = adapter.apply {
+                                            addAll(movieList)
+                                        }
+                                    }, {}
+                                )
+                        )
+                    },
+                    { error -> Log.d(TAG, "Error: ${error.message}") }
+                )
+        )
+    }
+
     private fun search() = with(searchBinding) {
-        Observable.create(ObservableOnSubscribe<String> { subscriber ->
-            searchToolbar.binding.searchEditText.afterTextChanged {
-                subscriber.onNext(it.toString())
-                if (it.toString().isEmpty()) {
-                    binding.moviesRecyclerView.adapter = adapter.apply {
-                        clear()
+        disposables.add(
+            PublishSubject.create(ObservableOnSubscribe<String> { subscriber ->
+                searchToolbar.binding.searchEditText.afterTextChanged {
+                    subscriber.onNext(it.toString())
+                    if (it.toString().isEmpty()) {
+                        binding.moviesRecyclerView.adapter = adapter.apply {
+                            clear()
+                        }
+                        movieList = setOf()
+                        binding.progress.visibility = View.GONE
                     }
                 }
-            }
-        })
-            .doOnNext {
-                binding.moviesRecyclerView.visibility = View.GONE
-                binding.progress.visibility = View.VISIBLE
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .filter { text -> text.isNotBlank() && text.length >= 3 }
-            .map { text -> text.lowercase(Locale.getDefault()).trim() }
-            .distinctUntilChanged()
-            .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
-
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnEach {
-                binding.progress.visibility = View.GONE
-                binding.moviesRecyclerView.visibility = View.VISIBLE
-            }
-            .doOnSubscribe {
-                binding.moviesRecyclerView.visibility = View.GONE
-                binding.progress.visibility = View.VISIBLE
-            }
-            .retry()
-            .subscribe(
-                { query ->
-                    val findMovies = MovieApiClient.apiClient.findMovies(query)
-                    disposables.add(
-                        findMovies
-                            .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                { result ->
-                                    val movieList =
-                                        result.results.map {
-                                            MovieItem(MovieSearchMapper().toViewObject(it)) { movie ->
-                                                openMovieDetails(
-                                                    movie
-                                                )
-                                            }
-                                        }.toList()
-                                    binding.moviesRecyclerView.adapter = adapter.apply {
-                                        addAll(movieList)
-                                    }
-                                }, {}
-                            )
-                    )
-
-                },
-                { error -> Log.d(TAG, "Error: ${error.message}") }
-            )
+            })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .doOnNext {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter { text -> text.isNotBlank() && text.length >= 3 }
+                .map { text -> text.lowercase(Locale.getDefault()).trim() }
+                .distinctUntilChanged()
+                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnEach {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .retry()
+                .subscribe(
+                    { query ->
+                        val findMovies = MovieApiClient.apiClient.findMovies(query)
+                        disposables.add(
+                            findMovies
+                                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { result ->
+                                        Log.d("SSSS", "Error subscribe: ${result.results}")
+                                        movieList =
+                                            result.results.distinct().map {
+                                                MovieItem(MovieSearchMapper().toViewObject(it)) { movie ->
+                                                    openMovieDetails(
+                                                        movie
+                                                    )
+                                                }
+                                            }.toSet()
+                                        Log.d("SSSS", "movieList.size subscribe: ${movieList.size}")
+                                        binding.moviesRecyclerView.adapter = adapter.apply {
+                                            addAll(movieList)
+                                        }
+                                    }, {}
+                                )
+                        )
+                    },
+                    { error -> Log.d(TAG, "Error: ${error.message}") }
+                )
+        )
     }
 
     private fun clear() {
@@ -133,6 +189,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 clear()
             }
             binding.progress.visibility = View.GONE
+            movieList = setOf()
         }
     }
 
