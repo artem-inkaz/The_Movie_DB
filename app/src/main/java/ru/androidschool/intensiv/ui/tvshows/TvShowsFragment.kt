@@ -8,15 +8,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.data.mappers.TvShowsMapper
-import ru.androidschool.intensiv.data.tvseries.TvShowsResponse
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.network.MovieApiClient
-import timber.log.Timber
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
 
@@ -33,6 +32,8 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         }
     }
 
+    private var disposables = CompositeDisposable()
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -44,37 +45,40 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
-        getPopularTvShows.enqueue(object : retrofit2.Callback<TvShowsResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<TvShowsResponse>,
-                response: Response<TvShowsResponse>
-            ) {
-                val tvShowsList =
-                    response.body()?.results?.map {
-                        TvShowDestItem(TvShowsMapper().toViewObject(it)) { tvShows ->
-                            openShowDest(
-                                tvShows
-                            )
+        disposables.add(
+            getPopularTvShows
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        val tvShowsList =
+                            result.results.map {
+                                TvShowDestItem(TvShowsMapper().toViewObject(it)) { tvShows ->
+                                    openShowDest(
+                                        tvShows
+                                    )
+                                }
+                            }.toList()
+                        binding.moviesRecyclerView.adapter = adapter.apply {
+                            if (tvShowsList != null) {
+                                addAll(tvShowsList)
+                            }
                         }
-                    }?.toList()
-
-                binding.moviesRecyclerView.adapter = adapter.apply {
-                    if (tvShowsList != null) {
-                        addAll(tvShowsList)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<TvShowsResponse>, t: Throwable) {
-                Timber.tag(TAG).e(t.toString())
-            }
-        })
+                    },
+                    {},
+                )
+        )
     }
 
     private fun openShowDest(showDest: TvShowsLocal) {
         val bundle = Bundle()
         bundle.putString(KEY_TITLE, showDest.name)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposables.clear()
     }
 
     companion object {

@@ -4,22 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.data.moveid.MoveIdResponse
 import ru.androidschool.intensiv.data.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
-import timber.log.Timber
 import kotlin.properties.Delegates
 
 class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     // Для загрузки из MovieList
     private var movieBundle by Delegates.notNull<Int>()
+    private var disposables = CompositeDisposable()
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -31,7 +31,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-         arguments?.getInt(KEY_MOVIE_ID)?.let {
+        arguments?.getInt(KEY_MOVIE_ID)?.let {
             movieBundle = arguments?.getInt(KEY_MOVIE_ID)!!
             movieBundle.let { movie ->
                 showMovieDetail(movie)
@@ -41,24 +41,27 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     private fun showMovieDetail(id: Int) = with(binding) {
         val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(id))
-        getMovieDetails.enqueue(object : retrofit2.Callback<MoveIdResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MoveIdResponse>,
-                response: Response<MoveIdResponse>
-            ) {
+        disposables.add(
+            getMovieDetails
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        result?.let {
+                            title.text = it.title
+                            movieRating.rating = voteAverage(it.voteAverage)
+                            moveDescription.text = it.overview
+                            it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
+                        }
+                    },
+                    {},
+                )
+        )
+    }
 
-                response.body()?.let {
-                    title.text = it.title
-                    movieRating.rating = voteAverage(it.voteAverage)
-                    moveDescription.text = it.overview
-                    it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MoveIdResponse>, t: Throwable) {
-                Timber.tag(TAG).e(t.toString())
-            }
-        })
+    override fun onStop() {
+        super.onStop()
+        disposables.clear()
     }
 
     companion object {
