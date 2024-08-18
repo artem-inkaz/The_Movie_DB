@@ -144,6 +144,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .filter { text -> text.isNotBlank() && text.length >= 3 }
                 .map { text -> text.lowercase(Locale.getDefault()).trim() }
                 .distinctUntilChanged()
+                .switchMap { query->  MovieApiClient.apiClient.findMovies(query)}
                 .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnEach {
@@ -153,7 +154,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .retry()
                 .subscribe(
                     { query ->
-                        val findMovies = MovieApiClient.apiClient.findMovies(query)
+                        val findMovies = MovieApiClient.apiClient.findMovies(query.toString())
                         disposables.add(
                             findMovies
                                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
