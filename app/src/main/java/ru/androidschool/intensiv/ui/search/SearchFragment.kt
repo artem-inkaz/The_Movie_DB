@@ -63,20 +63,40 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val searchTerm = requireArguments().getString(KEY_SEARCH)
         searchBinding.searchToolbar.setText(searchTerm)
         search()
+        clear()
     }
 
     private fun search() = with(searchBinding) {
         Observable.create(ObservableOnSubscribe<String> { subscriber ->
             searchToolbar.binding.searchEditText.afterTextChanged {
                 subscriber.onNext(it.toString())
+                if (it.toString().isEmpty()) {
+                    binding.moviesRecyclerView.adapter = adapter.apply {
+                        clear()
+                    }
+                }
             }
         })
+            .doOnNext {
+                binding.moviesRecyclerView.visibility = View.GONE
+                binding.progress.visibility = View.VISIBLE
+            }
             .debounce(500, TimeUnit.MILLISECONDS)
             .filter { text -> text.isNotBlank() && text.length >= 3 }
             .map { text -> text.lowercase(Locale.getDefault()).trim() }
             .distinctUntilChanged()
             .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
+
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnEach {
+                binding.progress.visibility = View.GONE
+                binding.moviesRecyclerView.visibility = View.VISIBLE
+            }
+            .doOnSubscribe {
+                binding.moviesRecyclerView.visibility = View.GONE
+                binding.progress.visibility = View.VISIBLE
+            }
+            .retry()
             .subscribe(
                 { query ->
                     val findMovies = MovieApiClient.apiClient.findMovies(query)
@@ -95,9 +115,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                                             }
                                         }.toList()
                                     binding.moviesRecyclerView.adapter = adapter.apply {
-                                        if (movieList != null) {
-                                            addAll(movieList)
-                                        }
+                                        addAll(movieList)
                                     }
                                 }, {}
                             )
@@ -106,6 +124,16 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 },
                 { error -> Log.d(TAG, "Error: ${error.message}") }
             )
+    }
+
+    private fun clear() {
+        searchBinding.searchToolbar.binding.deleteTextButton.setOnClickListener {
+            searchBinding.searchToolbar.binding.searchEditText.text.clear()
+            binding.moviesRecyclerView.adapter = adapter.apply {
+                clear()
+            }
+            binding.progress.visibility = View.GONE
+        }
     }
 
     private fun openMovieDetails(movie: MovieLocal) {

@@ -12,8 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
@@ -69,58 +71,54 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         val moviesGroupList = mutableListOf<MainCardContainer>()
 
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
-        disposables.addAll(
-            getNowPlayingMovies
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
-                .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.now_playing,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
-                    },
-                    {},
-                )
-        )
-
         val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
-        disposables.addAll(
-            getUpComingMovies
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.upcoming,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
-                    },
-                    {},
-                )
-        )
-
         val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
-        disposables.addAll(
-            getPopularMovies
+
+        disposables.add(
+            Single.zip(getNowPlayingMovies, getUpComingMovies, getPopularMovies,
+                Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
+                    val nowPlayingMoviesList = getMoviesGroupList(
+                        title = R.string.now_playing,
+                        results = nowPlayingMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    nowPlayingMoviesList?.let { moviesGroupList.add(it) }
+                    val upComingMoviesList = getMoviesGroupList(
+                        title = R.string.upcoming,
+                        results = upComingMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    upComingMoviesList?.let { moviesGroupList.add(it) }
+                    val popularMoviesList = getMoviesGroupList(
+                        title = R.string.popular,
+                        results = popularMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    popularMoviesList?.let { moviesGroupList.add(it) } == true
+
+                })
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .doFinally {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.popular,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
+                    {
                         binding.moviesRecyclerView.adapter = adapter.apply {
                             addAll(moviesGroupList)
                         }
                     },
-                    {},
+                    {
+                        binding.moviesRecyclerView.visibility = View.VISIBLE
+                        binding.progress.visibility = View.GONE
+                        Log.d(TAG, "Error: Какая-то ошибка")
+                    }
                 )
         )
     }

@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.data.mappers.TvShowsMapper
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.network.MovieApiClient
+import java.util.concurrent.TimeUnit
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
 
@@ -47,8 +49,18 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
         disposables.add(
             getPopularTvShows
+                .delay(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .doFinally {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .subscribe(
                     { result ->
                         val tvShowsList =
@@ -65,7 +77,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                             }
                         }
                     },
-                    {},
+                    { Log.d(TAG, "Error: Какая-то ошибка") },
                 )
         )
     }

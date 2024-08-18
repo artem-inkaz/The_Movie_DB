@@ -29,4 +29,7 @@
     <dimen name="search_bar_height">56dp</dimen>
     <dimen name="min_height">100dp</dimen>
 
+    <!-- ProgressBar -->
+    <dimen name="progressbar">50dp</dimen>
+
 </resources>
