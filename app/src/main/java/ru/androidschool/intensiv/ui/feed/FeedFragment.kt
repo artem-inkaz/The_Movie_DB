@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -72,6 +73,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             getNowPlayingMovies
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .subscribe(
                     { result ->
                         val moviesList = getMoviesGroupList(
