@@ -101,4 +101,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$rootProject.kotlinxSerializationJson"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$rootProject.kotlinxSerializationConverter"
 
+    //RxJava
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.adapterRxjava2"
 }

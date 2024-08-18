@@ -11,10 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
-import ru.androidschool.intensiv.data.movies.MoviesResponse
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
@@ -44,6 +44,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             popExit = R.anim.slide_out_right
         }
     }
+    private var disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,66 +68,61 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         val moviesGroupList = mutableListOf<MainCardContainer>()
 
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
-        getNowPlayingMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = getMoviesGroupList(
-                    title = R.string.now_playing,
-                    results = response.body()?.results,
-                    openMovieDetails = { openMovieDetails(it) }
+        disposables.addAll(
+            getNowPlayingMovies
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        val moviesList = getMoviesGroupList(
+                            title = R.string.now_playing,
+                            results = result?.results,
+                            openMovieDetails = { openMovieDetails(it) }
+                        )
+                        moviesList?.let { moviesGroupList.add(it) }
+                    },
+                    {},
                 )
-                moviesList?.let { moviesGroupList.add(it) }
-
-            }
-
-            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
-                Timber.tag(TAG).e(t.toString())
-            }
-        })
+        )
 
         val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
-        getUpComingMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = getMoviesGroupList(
-                    title = R.string.upcoming,
-                    results = response.body()?.results,
-                    openMovieDetails = { openMovieDetails(it) }
+        disposables.addAll(
+            getUpComingMovies
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        val moviesList = getMoviesGroupList(
+                            title = R.string.upcoming,
+                            results = result?.results,
+                            openMovieDetails = { openMovieDetails(it) }
+                        )
+                        moviesList?.let { moviesGroupList.add(it) }
+                    },
+                    {},
                 )
-                moviesList?.let { moviesGroupList.add(it) }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
-                Timber.tag(TAG).e(t.toString())
-            }
-        })
+        )
 
         val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
-        getPopularMovies.enqueue(object : retrofit2.Callback<MoviesResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MoviesResponse>,
-                response: Response<MoviesResponse>
-            ) {
-                val moviesList = getMoviesGroupList(
-                    title = R.string.popular,
-                    results = response.body()?.results,
-                    openMovieDetails = { openMovieDetails(it) }
+        disposables.addAll(
+            getPopularMovies
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        val moviesList = getMoviesGroupList(
+                            title = R.string.popular,
+                            results = result?.results,
+                            openMovieDetails = { openMovieDetails(it) }
+                        )
+                        moviesList?.let { moviesGroupList.add(it) }
+                        binding.moviesRecyclerView.adapter = adapter.apply {
+                            addAll(moviesGroupList)
+                        }
+                    },
+                    {},
                 )
-                moviesList?.let { moviesGroupList.add(it) }
-
-                binding.moviesRecyclerView.adapter = adapter.apply {
-                    addAll(moviesGroupList)
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MoviesResponse>, t: Throwable) {
-                Timber.tag(TAG).e(t.toString())
-            }
-        })
+        )
     }
 
     private fun openMovieDetails(movie: MovieLocal) {
@@ -147,6 +143,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         binding.moviesRecyclerView.adapter = adapter.apply {
             clear()
         }
+        disposables.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
