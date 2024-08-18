@@ -144,7 +144,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 .filter { text -> text.isNotBlank() && text.length >= 3 }
                 .map { text -> text.lowercase(Locale.getDefault()).trim() }
                 .distinctUntilChanged()
-                .switchMap { query->  MovieApiClient.apiClient.findMovies(query)}
                 .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnEach {
