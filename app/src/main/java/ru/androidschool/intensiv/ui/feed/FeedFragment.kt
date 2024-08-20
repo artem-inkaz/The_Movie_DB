@@ -13,13 +13,13 @@ import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -97,8 +97,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                     popularMoviesList?.let { moviesGroupList.add(it) } == true
 
                 })
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .applySchedulers()
                 .doOnSubscribe {
                     binding.moviesRecyclerView.visibility = View.GONE
                     binding.progress.visibility = View.VISIBLE

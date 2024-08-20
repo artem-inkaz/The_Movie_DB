@@ -9,14 +9,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.data.mappers.TvShowsMapper
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.network.MovieApiClient
-import java.util.concurrent.TimeUnit
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
 
@@ -46,8 +45,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
         disposables.add(
             getPopularTvShows
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .applySchedulers()
                 .doOnSubscribe {
                     binding.moviesRecyclerView.visibility = View.GONE
                     binding.progress.visibility = View.VISIBLE

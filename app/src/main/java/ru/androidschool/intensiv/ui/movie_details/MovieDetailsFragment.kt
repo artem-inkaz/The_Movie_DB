@@ -5,10 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -42,8 +42,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
         val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(id))
         disposables.add(
             getMovieDetails
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .applySchedulers()
                 .subscribe(
                     { result ->
                         result?.let {
