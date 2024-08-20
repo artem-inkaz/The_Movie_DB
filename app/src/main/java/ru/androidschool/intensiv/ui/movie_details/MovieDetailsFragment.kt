@@ -1,11 +1,11 @@
 package ru.androidschool.intensiv.ui.movie_details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
@@ -19,7 +19,6 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     // Для загрузки из MovieList
     private var movieBundle by Delegates.notNull<Int>()
-    private var disposables = CompositeDisposable()
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -54,14 +53,9 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                             it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
                         }
                     },
-                    {},
+                    { Log.d(TAG, "56 doOnError: ${it.message}") }
                 )
         )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
     }
 
     companion object {

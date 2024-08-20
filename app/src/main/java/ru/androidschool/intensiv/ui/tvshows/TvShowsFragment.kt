@@ -10,7 +10,6 @@ import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.TvShowsLocal
@@ -34,8 +33,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         }
     }
 
-    private var disposables = CompositeDisposable()
-
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -49,7 +46,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
         disposables.add(
             getPopularTvShows
-                .delay(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(io.reactivex.schedulers.Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -60,7 +56,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                 }
-                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
+                .doOnError { Log.d(TAG, "60 doOnError: ${it.message}") }
                 .subscribe(
                     { result ->
                         val tvShowsList =
@@ -77,7 +73,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                             }
                         }
                     },
-                    { Log.d(TAG, "Error: Какая-то ошибка") },
+                    { Log.d(TAG, "77 Error: ${it.message}") },
                 )
         )
     }
@@ -86,11 +82,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val bundle = Bundle()
         bundle.putString(KEY_TITLE, showDest.name)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
     }
 
     companion object {

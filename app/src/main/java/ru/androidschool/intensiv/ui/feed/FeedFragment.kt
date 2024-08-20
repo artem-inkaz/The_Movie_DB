@@ -107,7 +107,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                 }
-                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
+                .doOnError { Log.d(TAG, "110 Error: Какая-то ошибка doOnError: ${it.message}") }
                 .subscribe(
                     {
                         binding.moviesRecyclerView.adapter = adapter.apply {
@@ -117,7 +117,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                     {
                         binding.moviesRecyclerView.visibility = View.VISIBLE
                         binding.progress.visibility = View.GONE
-                        Log.d(TAG, "Error: Какая-то ошибка")
+                        Log.d(TAG, "120 Error: Какая-то ошибка : ${it.message}")
                     }
                 )
         )

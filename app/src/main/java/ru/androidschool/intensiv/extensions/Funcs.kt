@@ -7,7 +7,12 @@ import ru.androidschool.intensiv.data.movies.Movie
 import ru.androidschool.intensiv.ui.feed.MainCardContainer
 import ru.androidschool.intensiv.ui.feed.MovieItem
 import ru.androidschool.utils.Constants.VOTEAVERAGE
+import java.util.Calendar
 import java.util.Locale
+
+// Current date
+val calendar = Calendar.getInstance()
+val currentYear = calendar.get(Calendar.YEAR)
 
 fun getLanguage()= Locale.getDefault().toLanguageTag()
 
