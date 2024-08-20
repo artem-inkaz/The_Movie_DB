@@ -7,15 +7,14 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
@@ -25,14 +24,12 @@ import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
-class FeedFragment : Fragment(R.layout.feed_fragment) {
+class FeedFragment : BaseFragment<FeedFragmentBinding>() {
 
-    private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
     private val searchBinding get() = _searchBinding!!
 
     private val adapter by lazy {
@@ -47,16 +44,14 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             popExit = R.anim.slide_out_right
         }
     }
-    private var disposables = CompositeDisposable()
 
-    override fun onCreateView(
+    override fun createViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        container: ViewGroup?
+    ): FeedFragmentBinding {
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
-        _searchBinding = FeedHeaderBinding.bind(binding.root)
-        return binding.root
+        _searchBinding = FeedHeaderBinding.bind(_binding!!.root)
+        return _binding!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -140,7 +135,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         binding.moviesRecyclerView.adapter = adapter.apply {
             clear()
         }
-        disposables.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -149,7 +143,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         _searchBinding = null
     }
 

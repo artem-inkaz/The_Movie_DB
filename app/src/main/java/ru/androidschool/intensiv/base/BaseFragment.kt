@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseFragment<Binding : ViewBinding> : BaseRxFragment() {
 
     protected val binding: Binding get() = _binding!!
-    private var _binding: Binding? = null
+    protected var _binding: Binding? = null
 
     abstract fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): Binding
 

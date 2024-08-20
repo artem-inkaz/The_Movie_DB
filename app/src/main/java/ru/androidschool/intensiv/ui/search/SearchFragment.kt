@@ -5,14 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.data.mappers.MovieSearchResultItemMapper
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
@@ -26,15 +25,14 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
-    private var _binding: FragmentSearchBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
     private val searchBinding get() = _searchBinding!!
+
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
     }
@@ -47,16 +45,16 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
     }
     var movieList: Set<MovieItem> = setOf()
-    private var disposables = CompositeDisposable()
-    override fun onCreateView(
+
+    override fun createViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        container: ViewGroup?
+    ): FragmentSearchBinding {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        _searchBinding = FeedHeaderBinding.bind(binding.root)
-        return binding.root
+        _searchBinding = FeedHeaderBinding.bind(_binding!!.root)
+        return _binding!!
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -132,14 +130,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         _searchBinding = null
     }
 
