@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.movie_details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
@@ -52,7 +52,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                             it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
                         }
                     },
-                    { Log.d(TAG, "56 doOnError: ${it.message}") }
+                    { Timber.tag(TAG).d("Error subscribe : %s", it.message) }
                 )
         )
     }

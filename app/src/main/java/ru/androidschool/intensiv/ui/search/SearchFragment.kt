@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,21 +8,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.data.mappers.MovieSearchResultItemMapper
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.feed.MovieItem
-import ru.androidschool.utils.Constants.MIN_LENGTH_WORD
-import java.util.Locale
-import java.util.concurrent.TimeUnit
-
+import timber.log.Timber
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
@@ -55,39 +51,24 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         return _binding!!
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val searchTerm = requireArguments().getString(KEY_SEARCH)
-        searchBinding.searchToolbar.setText(searchTerm)
         search()
+        searchBinding.searchToolbar.setText(searchTerm)
         clear()
     }
 
     private fun search() = with(searchBinding) {
         disposables.add(
-            searchBinding.searchToolbar.getTextWatcherObservable()
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .doOnNext {
-                    binding.moviesRecyclerView.adapter = adapter.apply {
-                        clear()
-                    }
-                    movieList = setOf()
-                }
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .filter { text -> text.isNotBlank() && text.length >= MIN_LENGTH_WORD }
-                .map { text -> text.lowercase(Locale.getDefault()).trim() }
-                .distinctUntilChanged()
-                .doOnError { Log.d(TAG, "83 Error doOnError: ${it.message}") }
-                .observeOn(AndroidSchedulers.mainThread())
+            searchBinding.searchToolbar.onTextChanged()
+                .switchMap { query -> MovieApiClient.apiClient.findMovies(query) }
+                .applySchedulers()
                 .doOnEach {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                 }
-                .observeOn(io.reactivex.schedulers.Schedulers.io())
-                .switchMap { query -> MovieApiClient.apiClient.findMovies(query) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext { result ->
+                .subscribe({ result ->
                     movieList =
                         result.results.distinct().map {
                             MovieItem(
@@ -100,16 +81,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                                 )
                             }
                         }.toSet()
+                    adapter.clear()
                     binding.moviesRecyclerView.adapter = adapter.apply {
                         addAll(movieList)
                     }
-                }
-                .doFinally {
-                    binding.moviesRecyclerView.visibility = View.VISIBLE
-                    binding.progress.visibility = View.GONE
-                }
-                .doOnError { Log.d(TAG, "Error doOnError : ${it.message}") }
-                .subscribe()
+                },
+                    { Timber.e("Error: ${it.message}") }
+                )
         )
     }
 

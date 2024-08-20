@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.tvshows
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import ru.androidschool.intensiv.data.mappers.TvShowsMapper
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.network.MovieApiClient
+import timber.log.Timber
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
 
@@ -54,7 +54,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                 }
-                .doOnError { Log.d(TAG, "60 doOnError: ${it.message}") }
+                .doOnError { Timber.tag(TAG).d("doOnError: %s", it.message) }
                 .subscribe(
                     { result ->
                         val tvShowsList =
@@ -71,7 +71,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                             }
                         }
                     },
-                    { Log.d(TAG, "77 Error: ${it.message}") },
+                    { Timber.tag(TAG).d("Error subscribe: %s", it.message) },
                 )
         )
     }

@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -101,7 +100,8 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                 }
-                .doOnError { Log.d(TAG, "110 Error: Какая-то ошибка doOnError: ${it.message}") }
+                .doOnError {
+                    Timber.tag(TAG).d("Error doOnError: %s", it.message) }
                 .subscribe(
                     {
                         binding.moviesRecyclerView.adapter = adapter.apply {
@@ -111,7 +111,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     {
                         binding.moviesRecyclerView.visibility = View.VISIBLE
                         binding.progress.visibility = View.GONE
-                        Log.d(TAG, "120 Error: Какая-то ошибка : ${it.message}")
+                        Timber.tag(TAG).d("Error subscribe : %s", it.message)
                     }
                 )
         )
