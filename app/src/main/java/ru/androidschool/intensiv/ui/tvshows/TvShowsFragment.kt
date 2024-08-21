@@ -8,14 +8,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.data.mappers.TvShowsMapper
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.network.MovieApiClient
+import timber.log.Timber
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
 
@@ -32,8 +32,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         }
     }
 
-    private var disposables = CompositeDisposable()
-
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -47,8 +45,16 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val getPopularTvShows = MovieApiClient.apiClient.getPopularTvShows()
         disposables.add(
             getPopularTvShows
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .applySchedulers()
+                .doOnSubscribe {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .doFinally {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .doOnError { Timber.tag(TAG).d("doOnError: %s", it.message) }
                 .subscribe(
                     { result ->
                         val tvShowsList =
@@ -65,7 +71,7 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
                             }
                         }
                     },
-                    {},
+                    { Timber.tag(TAG).d("Error subscribe: %s", it.message) },
                 )
         )
     }
@@ -74,11 +80,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>() {
         val bundle = Bundle()
         bundle.putString(KEY_TITLE, showDest.name)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
     }
 
     companion object {

@@ -11,10 +11,10 @@ import ru.androidschool.intensiv.data.moveidcredits.MoveIdCreditsResponse
 import ru.androidschool.intensiv.data.movies.MoviesResponse
 import ru.androidschool.intensiv.data.search.MovieSearchResponse
 import ru.androidschool.intensiv.data.tvseries.TvShowsResponse
+import ru.androidschool.intensiv.extensions.currentYear
 import ru.androidschool.intensiv.extensions.getLanguage
 import ru.androidschool.utils.Constants.PAGE
 import ru.androidschool.utils.Constants.REGION
-import ru.androidschool.utils.Constants.YEAR
 
 interface MovieApiInterface {
     @GET("movie/now_playing")
@@ -64,6 +64,6 @@ interface MovieApiInterface {
         @Query("include_adult") adult: Boolean = false,
         @Query("region") region: String = REGION,
         @Query("page") page: Int = PAGE,
-        @Query("year") year: String = YEAR,
+        @Query("year") year: String = "$currentYear",
     ): Observable<MovieSearchResponse>
 }

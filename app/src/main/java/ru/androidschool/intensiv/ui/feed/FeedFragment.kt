@@ -1,36 +1,34 @@
 package ru.androidschool.intensiv.ui.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.Single
+import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
-class FeedFragment : Fragment(R.layout.feed_fragment) {
+class FeedFragment : BaseFragment<FeedFragmentBinding>() {
 
-    private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
     private val searchBinding get() = _searchBinding!!
 
     private val adapter by lazy {
@@ -45,16 +43,14 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             popExit = R.anim.slide_out_right
         }
     }
-    private var disposables = CompositeDisposable()
 
-    override fun onCreateView(
+    override fun createViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        container: ViewGroup?
+    ): FeedFragmentBinding {
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
-        _searchBinding = FeedHeaderBinding.bind(binding.root)
-        return binding.root
+        _searchBinding = FeedHeaderBinding.bind(_binding!!.root)
+        return _binding!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,58 +65,54 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         val moviesGroupList = mutableListOf<MainCardContainer>()
 
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
-        disposables.addAll(
-            getNowPlayingMovies
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .doOnError { Log.d(TAG, "Error: Какая-то ошибка") }
-                .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.now_playing,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
-                    },
-                    {},
-                )
-        )
-
         val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
-        disposables.addAll(
-            getUpComingMovies
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.upcoming,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
-                    },
-                    {},
-                )
-        )
-
         val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
-        disposables.addAll(
-            getPopularMovies
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+
+        disposables.add(
+            Single.zip(getNowPlayingMovies, getUpComingMovies, getPopularMovies,
+                Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
+                    val nowPlayingMoviesList = getMoviesGroupList(
+                        title = R.string.now_playing,
+                        results = nowPlayingMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    nowPlayingMoviesList?.let { moviesGroupList.add(it) }
+                    val upComingMoviesList = getMoviesGroupList(
+                        title = R.string.upcoming,
+                        results = upComingMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    upComingMoviesList?.let { moviesGroupList.add(it) }
+                    val popularMoviesList = getMoviesGroupList(
+                        title = R.string.popular,
+                        results = popularMovies.results,
+                        openMovieDetails = { openMovieDetails(it) }
+                    )
+                    popularMoviesList?.let { moviesGroupList.add(it) } == true
+
+                })
+                .applySchedulers()
+                .doOnSubscribe {
+                    binding.moviesRecyclerView.visibility = View.GONE
+                    binding.progress.visibility = View.VISIBLE
+                }
+                .doFinally {
+                    binding.progress.visibility = View.GONE
+                    binding.moviesRecyclerView.visibility = View.VISIBLE
+                }
+                .doOnError {
+                    Timber.tag(TAG).d("Error doOnError: %s", it.message) }
                 .subscribe(
-                    { result ->
-                        val moviesList = getMoviesGroupList(
-                            title = R.string.popular,
-                            results = result?.results,
-                            openMovieDetails = { openMovieDetails(it) }
-                        )
-                        moviesList?.let { moviesGroupList.add(it) }
+                    {
                         binding.moviesRecyclerView.adapter = adapter.apply {
                             addAll(moviesGroupList)
                         }
                     },
-                    {},
+                    {
+                        binding.moviesRecyclerView.visibility = View.VISIBLE
+                        binding.progress.visibility = View.GONE
+                        Timber.tag(TAG).d("Error subscribe : %s", it.message)
+                    }
                 )
         )
     }
@@ -143,7 +135,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         binding.moviesRecyclerView.adapter = adapter.apply {
             clear()
         }
-        disposables.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -152,7 +143,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         _searchBinding = null
     }
 

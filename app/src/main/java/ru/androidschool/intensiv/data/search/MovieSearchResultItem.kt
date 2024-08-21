@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.androidschool.intensiv.BuildConfig
 
 @Serializable
-data class MovieSearch(
+data class MovieSearchResultItem(
     val adult: Boolean,
     val genre_ids: List<Int>,
     val id: Int,

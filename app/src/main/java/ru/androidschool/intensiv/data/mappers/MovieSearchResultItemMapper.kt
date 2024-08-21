@@ -2,9 +2,9 @@ package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.base.MapperDomain
 import ru.androidschool.intensiv.data.MovieLocal as OutMovie
-import ru.androidschool.intensiv.data.search.MovieSearch as InMovie
+import ru.androidschool.intensiv.data.search.MovieSearchResultItem as InMovie
 
-class MovieSearchMapper : MapperDomain.ViewObjectMapper<OutMovie, InMovie> {
+class MovieSearchResultItemMapper : MapperDomain.ViewObjectMapper<OutMovie, InMovie> {
 
     override fun toViewObject(dto: InMovie): OutMovie = with(dto) {
         return OutMovie(

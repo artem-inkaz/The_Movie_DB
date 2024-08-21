@@ -2,6 +2,7 @@ package ru.androidschool.intensiv
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.Calendar
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -9,8 +10,16 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
+
+//    @Test
+//    fun current_year() {
+//        val calendar = Calendar.getInstance()
+//        val currentYear = ru.androidschool.intensiv.extensions.calendar.get(Calendar.YEAR)
+//        assertEquals(2024, currentYear)
+//    }
 }
