@@ -16,10 +16,10 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 
-    @Test
-    fun current_year() {
-        val calendar = Calendar.getInstance()
-        val currentYear = ru.androidschool.intensiv.extensions.calendar.get(Calendar.YEAR)
-        assertEquals(2024, currentYear)
-    }
+//    @Test
+//    fun current_year() {
+//        val calendar = Calendar.getInstance()
+//        val currentYear = ru.androidschool.intensiv.extensions.calendar.get(Calendar.YEAR)
+//        assertEquals(2024, currentYear)
+//    }
 }

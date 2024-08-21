@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
+import ru.androidschool.utils.Constants.MIN_LENGTH_WORD
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -46,7 +47,7 @@ class SearchBar @JvmOverloads constructor(
         return subject
             .debounce(500, TimeUnit.MILLISECONDS)
             .map { it.trim() }
-            .filter { it.length > 3 }
+            .filter { it.length > MIN_LENGTH_WORD }
             .distinctUntilChanged()
     }
 
