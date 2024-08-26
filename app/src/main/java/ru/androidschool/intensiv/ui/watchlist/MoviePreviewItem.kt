@@ -5,8 +5,9 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
 
-import ru.androidschool.intensiv.data.MovieLocal
+import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.databinding.ItemSmallBinding
+import ru.androidschool.intensiv.extensions.loadImageByUrl
 
 class MoviePreviewItem(
     private val content: MovieLocal,
@@ -19,10 +20,8 @@ class MoviePreviewItem(
         view.imagePreview.setOnClickListener {
             onClick.invoke(content)
         }
-        // TODO Получать из модели
-        Picasso.get()
-            .load("https://www.kinopoisk.ru/images/film_big/1143242.jpg")
-            .into(view.imagePreview)
+
+        content.backdropPath?.let { view.imagePreview.loadImageByUrl(it) }
     }
 
     override fun initializeViewBinding(v: View): ItemSmallBinding = ItemSmallBinding.bind(v)

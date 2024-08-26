@@ -1,8 +1,8 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.data.MovieLocal as OutMovie
-import ru.androidschool.intensiv.data.search.MovieSearchResultItem as InMovie
+import ru.androidschool.intensiv.domain.MovieLocal as OutMovie
+import ru.androidschool.intensiv.data.response.search.MovieSearchResultItem as InMovie
 
 class MovieSearchResultItemMapper : MapperDomain.ViewObjectMapper<OutMovie, InMovie> {
 
@@ -13,7 +13,8 @@ class MovieSearchResultItemMapper : MapperDomain.ViewObjectMapper<OutMovie, InMo
             overview = overview,
             voteAverage = voteAverage,
             backdropPath = backdropPath,
-            posterPath = posterPath
+            posterPath = posterPath,
+            movieGroup = ""
         )
     }
 

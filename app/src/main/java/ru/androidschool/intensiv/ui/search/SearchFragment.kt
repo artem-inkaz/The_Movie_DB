@@ -10,7 +10,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.data.MovieLocal
+import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.data.mappers.MovieSearchResultItemMapper
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding

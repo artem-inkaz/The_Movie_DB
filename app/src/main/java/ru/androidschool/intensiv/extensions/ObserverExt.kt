@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.extensions
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -18,6 +19,14 @@ fun <T> Observable<T>.applySchedulers(
     subscribeOnScheduler: Scheduler = Schedulers.io(),
     observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()
 ): Observable<T> {
+    return this.subscribeOn(subscribeOnScheduler)
+        .observeOn(observeOnScheduler)
+}
+
+fun Completable.applySchedulers(
+    subscribeOnScheduler: Scheduler = Schedulers.io(),
+    observeOnScheduler: Scheduler = AndroidSchedulers.mainThread()
+): Completable {
     return this.subscribeOn(subscribeOnScheduler)
         .observeOn(observeOnScheduler)
 }

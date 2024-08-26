@@ -5,4 +5,5 @@ object Constants {
     const val REGION = "CU"
     const val MIN_LENGTH_WORD = 3
     const val VOTEAVERAGE = 2
+    const val DATABASE_NAME = "movies_database"
 }

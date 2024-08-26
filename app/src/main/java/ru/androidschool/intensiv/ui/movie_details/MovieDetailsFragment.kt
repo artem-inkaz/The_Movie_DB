@@ -4,21 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.data.moveid.MovieId
+import ru.androidschool.intensiv.data.mappers.ActorMapper
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
+import ru.androidschool.intensiv.data.response.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
+import ru.androidschool.intensiv.ui.tvshows.TvShowsFragment
+import ru.androidschool.intensiv.ui.tvshows.TvShowsFragment.Companion
 import timber.log.Timber
 import kotlin.properties.Delegates
 
 class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
+    private val adapter by lazy {
+        GroupAdapter<GroupieViewHolder>()
+    }
+
     // Для загрузки из MovieList
-    private var movieBundle by Delegates.notNull<Int>()
+    private var movieIdBundle by Delegates.notNull<MovieLocal>()
+    lateinit var movieDetail: MovieLocal
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -31,30 +46,94 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.getInt(KEY_MOVIE_ID)?.let {
-            movieBundle = arguments?.getInt(KEY_MOVIE_ID)!!
-            movieBundle.let { movie ->
+            movieIdBundle = arguments?.getParcelable<MovieLocal>(KEY_MOVIE_ID)!!
+            movieIdBundle.let { movie ->
+                movieDetail = movie
                 showMovieDetail(movie)
+                showActors(movie.id)
+                binding.movieFavourite.isChecked = movie.like
             }
         }
+        checkFavouriteMovie()
     }
 
-    private fun showMovieDetail(id: Int) = with(binding) {
-        val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(id))
+    private fun showMovieDetail(movie: MovieLocal) = with(binding) {
+        val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(movie.id))
+//        val getMovieActors = MovieApiClient.apiClient.getMovieIdCredits(MovieId(movie.id))
         disposables.add(
+//            Single.zip(getMovieDetails,getMovieActors,
+//            BiFunction { details, actor ->
+//                details.
+//            })
             getMovieDetails
                 .applySchedulers()
                 .subscribe(
-                    { result ->
-                        result?.let {
+                    { result->
+                        result?.let { it ->
                             title.text = it.title
                             movieRating.rating = voteAverage(it.voteAverage)
                             moveDescription.text = it.overview
                             it.backdropPath?.let { it1 -> movePoster.loadImageByUrl(it1) }
+                            movieDetail = MovieLocal(
+                                id = it.id,
+                                title = it.title,
+                                overview = it.overview,
+                                voteAverage = it.voteAverage,
+                                backdropPath = it.backdropPath,
+                                posterPath = it.posterPath,
+                                like = movie.like,
+                                movieGroup = movie.movieGroup
+                            )
                         }
                     },
                     { Timber.tag(TAG).d("Error subscribe : %s", it.message) }
                 )
         )
+    }
+
+    private fun showActors(moveId: Int) {
+        val getMovieActors = MovieApiClient.apiClient.getMovieIdCredits(MovieId(moveId))
+        disposables.add(
+            getMovieActors
+                .applySchedulers()
+                .subscribe(
+                    {result ->
+                        val actorsList =
+                        result.cast.map {
+                            MovieActorItem(ActorMapper().toViewObject(it)) {
+                            }
+                        }
+                        binding.listActors.moviesActorsListView.adapter = adapter.apply {
+                            if (actorsList != null) {
+                                addAll(actorsList)
+                            }
+                        }
+                    },
+                    { Timber.tag(TvShowsFragment.TAG).d("Error subscribe: %s", it.message) }
+                ))
+    }
+
+    private fun checkFavouriteMovie() = with(binding) {
+        movieFavourite.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (::movieDetail.isInitialized) {
+                val movie = MovieLocal(
+                    id = movieDetail.id,
+                    title = movieDetail.title,
+                    overview = movieDetail.overview,
+                    voteAverage = movieDetail.voteAverage,
+                    backdropPath = movieDetail.backdropPath,
+                    posterPath = movieDetail.posterPath,
+                    like = isChecked,
+                    movieGroup = movieDetail.movieGroup
+                )
+                disposables.add(
+                    Completable.fromAction {
+                        RepositoryHolder.repositoryMovie().create(movie)
+                    }.applySchedulers()
+                        .subscribe()
+                )
+            }
+        }
     }
 
     companion object {

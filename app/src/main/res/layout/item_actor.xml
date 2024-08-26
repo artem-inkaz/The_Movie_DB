@@ -20,8 +20,8 @@
         android:layout_height="@dimen/image_preview_width"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-        tools:background="@color/white"
-        tools:src="@drawable/tom" />
+        tools:background="@color/grey"
+        src="@drawable/ic_profile" />
 
     <TextView
         android:id="@+id/description"

@@ -1,6 +1,6 @@
 package ru.androidschool.intensiv.data.mock
 
-import ru.androidschool.intensiv.data.MovieLocal
+import ru.androidschool.intensiv.domain.MovieLocal
 
 object MockRepository {
 
@@ -14,7 +14,8 @@ object MockRepository {
                 overview = "",
                 voteAverage = 10.0 - x,
                 posterPath = "",
-                backdropPath = ""
+                backdropPath = "",
+                movieGroup = ""
             )
             moviesList.add(movie)
         }

@@ -10,13 +10,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.data.MovieLocal
+import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
 import ru.androidschool.intensiv.network.MovieApiClient
@@ -63,6 +66,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
             }
         }
         val moviesGroupList = mutableListOf<MainCardContainer>()
+        val moviesLocalGroupList = mutableListOf<MovieLocal>()
 
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
         val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
@@ -72,23 +76,58 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
             Single.zip(getNowPlayingMovies, getUpComingMovies, getPopularMovies,
                 Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
                     val nowPlayingMoviesList = getMoviesGroupList(
+                        context = requireContext(),
                         title = R.string.now_playing,
                         results = nowPlayingMovies.results,
                         openMovieDetails = { openMovieDetails(it) }
                     )
-                    nowPlayingMoviesList?.let { moviesGroupList.add(it) }
+
+                    nowPlayingMoviesList?.let {
+                        val nowPlayingMoviesLocalList = nowPlayingMovies.results.map {
+                            fromApiToMovieDomain(
+                                it,
+                                requireContext().getString(R.string.now_playing)
+                            )
+                        }
+                        moviesLocalGroupList.addAll(nowPlayingMoviesLocalList)
+                        moviesGroupList.add(it)
+                    }
+
                     val upComingMoviesList = getMoviesGroupList(
+                        context = requireContext(),
                         title = R.string.upcoming,
                         results = upComingMovies.results,
                         openMovieDetails = { openMovieDetails(it) }
                     )
-                    upComingMoviesList?.let { moviesGroupList.add(it) }
+
+                    upComingMoviesList?.let {
+                        val upComingMoviesLocalList = upComingMovies.results.map {
+                            fromApiToMovieDomain(
+                                it,
+                                requireContext().getString(R.string.upcoming)
+                            )
+                        }
+                        moviesLocalGroupList.addAll(upComingMoviesLocalList)
+                        moviesGroupList.add(it)
+                    }
+
                     val popularMoviesList = getMoviesGroupList(
+                        context = requireContext(),
                         title = R.string.popular,
                         results = popularMovies.results,
                         openMovieDetails = { openMovieDetails(it) }
                     )
-                    popularMoviesList?.let { moviesGroupList.add(it) } == true
+
+                    popularMoviesList?.let {
+                        val popularMoviesLocalList = popularMovies.results.map {
+                            fromApiToMovieDomain(
+                                it,
+                                requireContext().getString(R.string.popular)
+                            )
+                        }
+                        moviesLocalGroupList.addAll(popularMoviesLocalList)
+                        moviesGroupList.add(it)
+                    } == true
 
                 })
                 .applySchedulers()
@@ -99,9 +138,14 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                 .doFinally {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
+                    Completable.fromAction {
+                        RepositoryHolder.repositoryMovie().insertAll(moviesLocalGroupList)
+                    }.applySchedulers()
+                        .subscribe()
                 }
                 .doOnError {
-                    Timber.tag(TAG).d("Error doOnError: %s", it.message) }
+                    Timber.tag(TAG).d("Error doOnError: %s", it.message)
+                }
                 .subscribe(
                     {
                         binding.moviesRecyclerView.adapter = adapter.apply {
@@ -119,7 +163,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
 
     private fun openMovieDetails(movie: MovieLocal) {
         val bundle = Bundle()
-        bundle.putInt(KEY_MOVIE_ID, movie.id)
+        bundle.putParcelable(KEY_MOVIE_ID, movie)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

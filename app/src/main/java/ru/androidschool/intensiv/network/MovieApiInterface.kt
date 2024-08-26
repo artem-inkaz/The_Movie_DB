@@ -5,12 +5,12 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.androidschool.intensiv.data.moveid.MoveIdResponse
-import ru.androidschool.intensiv.data.moveid.MovieId
-import ru.androidschool.intensiv.data.moveidcredits.MoveIdCreditsResponse
-import ru.androidschool.intensiv.data.movies.MoviesResponse
-import ru.androidschool.intensiv.data.search.MovieSearchResponse
-import ru.androidschool.intensiv.data.tvseries.TvShowsResponse
+import ru.androidschool.intensiv.data.response.moveid.MoveIdResponse
+import ru.androidschool.intensiv.data.response.moveid.MovieId
+import ru.androidschool.intensiv.data.response.moveidcredits.MoveIdCreditsResponse
+import ru.androidschool.intensiv.data.response.movies.MoviesResponse
+import ru.androidschool.intensiv.data.response.search.MovieSearchResponse
+import ru.androidschool.intensiv.data.response.tvseries.TvShowsResponse
 import ru.androidschool.intensiv.extensions.currentYear
 import ru.androidschool.intensiv.extensions.getLanguage
 import ru.androidschool.utils.Constants.PAGE
@@ -45,7 +45,7 @@ interface MovieApiInterface {
     fun getMovieDetails(
         @Path("movie_id") id: MovieId,
         @Query("language") language: String = getLanguage(),
-    ): Observable<MoveIdResponse>
+    ): Single<MoveIdResponse>
 
     @GET("movie/{movie_id}/credits")
     fun getMovieIdCredits(
