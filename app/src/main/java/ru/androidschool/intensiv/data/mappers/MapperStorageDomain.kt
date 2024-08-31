@@ -17,22 +17,21 @@ private fun toActorEntity(actorDomain: Cast) = ActorEntity(
     id = actorDomain.id,
     name = actorDomain.name,
     profile_path = actorDomain.profilePath?:"",
+)
 
-    )
-
-fun fromApiToMovieDomain(movie: Movie, movieGroup: String, like: Boolean? = false) = MovieLocal(
-    id = movie.id,
-    title = movie.title,
-    overview = movie.overview,
-    voteAverage = movie.voteAverage,
-    backdropPath = movie.backdropPath,
-    posterPath = movie.posterPath,
+fun fromApiToMovieDomain(movieApi: Movie, movieGroup: String, like: Boolean? = false) = MovieLocal(
+    id = movieApi.id,
+    title = movieApi.title,
+    overview = movieApi.overview,
+    voteAverage = movieApi.voteAverage,
+    backdropPath = movieApi.backdropPath,
+    posterPath = movieApi.posterPath,
     like = like ?: false,
     movieGroup = movieGroup
 )
 
 private fun fromStorageToMovieDomain(movieEntity: MovieEntity) = MovieLocal(
-    id = movieEntity.id.toInt(),
+    id = movieEntity.id,
     title = movieEntity.title,
     overview = movieEntity.overview,
     voteAverage = movieEntity.voteAverage,
@@ -42,13 +41,13 @@ private fun fromStorageToMovieDomain(movieEntity: MovieEntity) = MovieLocal(
     movieGroup = movieEntity.movieGroup
 )
 
-private fun fromApiToMovieEntity(movieDomain: Movie, movieGroup: String) = MovieEntity(
-    id = movieDomain.id,
-    title = movieDomain.title,
-    overview = movieDomain.overview,
-    voteAverage = movieDomain.voteAverage,
-    backdropPath = movieDomain.backdropPath,
-    posterPath = movieDomain.posterPath,
+private fun fromApiToMovieEntity(movieApi: Movie, movieGroup: String) = MovieEntity(
+    id = movieApi.id,
+    title = movieApi.title,
+    overview = movieApi.overview,
+    voteAverage = movieApi.voteAverage,
+    backdropPath = movieApi.backdropPath,
+    posterPath = movieApi.posterPath,
     like = false,
     movieGroup = movieGroup
 )

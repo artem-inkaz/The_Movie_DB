@@ -6,7 +6,7 @@ import androidx.room.Relation
 
 data class MoviesEntity(
     @Embedded
-    val movie: MovieEntity,
+    val movieEntity: MovieEntity,
 
     @Relation(
         parentColumn = "movie_id",
@@ -17,7 +17,7 @@ data class MoviesEntity(
             entityColumn = "actor_id"
         )
     )
-    val actors: List<ActorEntity>,
+    val actorsEntities: List<ActorEntity>?,
 
     @Relation(
         parentColumn = "movie_id",
@@ -28,5 +28,5 @@ data class MoviesEntity(
             entityColumn = "genre_id"
         )
     )
-    val genres: List<GenreEntity>,
+    val genresEntities: List<GenreEntity>?,
 )

@@ -18,6 +18,9 @@ interface ActorDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(link: ActorEntity): Completable
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(movie: List<ActorEntity>)
+
     @Update
     fun update(link: ActorEntity): Completable
 

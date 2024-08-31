@@ -2,23 +2,29 @@ package ru.androidschool.intensiv.data.repositoryimpl
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import ru.androidschool.intensiv.data.mappers.GenreMapper
+import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
 import ru.androidschool.intensiv.domain.Genre
 import ru.androidschool.intensiv.domain.repository.GenreRepository
 
 class GenreRepositoryImpl: GenreRepository {
+
+    private val moviesDB = MoviesDataBase.instance//MovieFinderApp.database
+    private val genreMapper = GenreMapper()
+
     override fun getAll(): Single<List<Genre>> {
-        TODO("Not yet implemented")
+        return moviesDB.getGenreDao().getAll().map { genreMapper.fromLocalDataBase(it) }
     }
 
     override fun add(genre: Genre): Completable {
-        TODO("Not yet implemented")
+        return moviesDB.getGenreDao().add(genreMapper.toLocalDataBase(genre))
     }
 
     override fun update(genre: Genre): Completable {
-        TODO("Not yet implemented")
+        return moviesDB.getGenreDao().update(genreMapper.toLocalDataBase(genre))
     }
 
     override fun delete(genre: Genre): Completable {
-        TODO("Not yet implemented")
+        return moviesDB.getGenreDao().delete(genreMapper.toLocalDataBase(genre))
     }
 }

@@ -18,10 +18,13 @@ interface MovieActorDao {
     fun getByMovieId(moveId: String): Single<List<MovieActorEntity>>
 
     @Query("SELECT * FROM ${MovieActorEntity.TABLE_NAME} WHERE ${MovieActorEntity.ACTOR_ID} = :actorId")
-    fun getByActorId(actorId: Long): Single<List<MovieActorEntity>>
+    fun getByActorId(actorId: Int): Single<List<MovieActorEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(moveAndActor: MovieActorEntity): Completable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addAll(moveAndActors: List<MovieActorEntity>)
 
     @Delete
     fun delete(moveAndActor: MovieActorEntity): Completable

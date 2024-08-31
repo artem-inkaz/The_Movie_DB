@@ -3,7 +3,6 @@ package ru.androidschool.intensiv.extensions
 import android.content.Context
 import androidx.annotation.StringRes
 import ru.androidschool.intensiv.domain.MovieLocal
-import ru.androidschool.intensiv.data.mappers.MovieMapper
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
 import ru.androidschool.intensiv.data.response.movies.Movie
 import ru.androidschool.intensiv.ui.feed.MainCardContainer

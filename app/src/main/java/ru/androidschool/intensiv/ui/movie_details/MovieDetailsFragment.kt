@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.data.mappers.ActorMapper
+import ru.androidschool.intensiv.data.mappers.ActorMapperDto
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.data.response.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.domain.Actor
+import ru.androidschool.intensiv.domain.MovieActor
 import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
@@ -21,7 +21,6 @@ import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.ui.tvshows.TvShowsFragment
-import ru.androidschool.intensiv.ui.tvshows.TvShowsFragment.Companion
 import timber.log.Timber
 import kotlin.properties.Delegates
 
@@ -68,7 +67,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
             getMovieDetails
                 .applySchedulers()
                 .subscribe(
-                    { result->
+                    { result ->
                         result?.let { it ->
                             title.text = it.title
                             movieRating.rating = voteAverage(it.voteAverage)
@@ -92,17 +91,40 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     }
 
     private fun showActors(moveId: Int) {
+        val actorsDomainList = mutableListOf<Actor>()
+        val movieActorsDomainList = mutableListOf<MovieActor>()
         val getMovieActors = MovieApiClient.apiClient.getMovieIdCredits(MovieId(moveId))
         disposables.add(
             getMovieActors
                 .applySchedulers()
+                .doFinally {
+                    Completable.fromAction {
+                        RepositoryHolder.repositoryActor().addAll(actorsDomainList)
+                        RepositoryHolder.repositoryMovieActor().addAll(movieActorsDomainList)
+                    }.applySchedulers()
+                        .subscribe()
+//                    Completable.fromAction {
+//                        RepositoryHolder.repositoryMovieActor().addAll(movieActorsDomainList)
+//                    }.applySchedulers()
+//                        .subscribe()
+                }
                 .subscribe(
-                    {result ->
+                    { result ->
+                        actorsDomainList.addAll(result.cast.map {
+                            ActorMapperDto().toViewObject(it)
+                        })
+                        movieActorsDomainList.addAll(actorsDomainList.map {
+                            MovieActor(
+                                movieId = movieDetail.id,
+                                actorId = it.id
+                            )
+                        })
+
                         val actorsList =
-                        result.cast.map {
-                            MovieActorItem(ActorMapper().toViewObject(it)) {
+                            actorsDomainList.map {
+                                MovieActorItem(it) {
+                                }
                             }
-                        }
                         binding.listActors.moviesActorsListView.adapter = adapter.apply {
                             if (actorsList != null) {
                                 addAll(actorsList)

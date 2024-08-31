@@ -1,6 +1,5 @@
 package ru.androidschool.intensiv.data.repositoryimpl
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.MovieStorageMapper
 import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
@@ -16,8 +15,8 @@ class MovieRepositoryImpl : MovieRepository {
         return moviesDB.getMovieDao().create(movieMapper.toLocalDataBase(movie))
     }
 
-    override fun insertAll(movie: List<MovieLocal>){
-        return moviesDB.getMovieDao().insertAll(movie.map { movieMapper.toLocalDataBase(it) })
+    override fun insertAll(movies: List<MovieLocal>) {
+        return moviesDB.getMovieDao().insertAll( movieMapper.toLocalDataBase(movies))
     }
 
     override fun update(movie: MovieLocal) {
@@ -34,7 +33,7 @@ class MovieRepositoryImpl : MovieRepository {
 
     override fun getAllMovies(): Single<List<MovieLocal>> {
         return moviesDB.getMovieDao().getAllMovies()
-            .map { it -> it.map { movieMapper.fromLocalDataBase(it) } }
+            .map { movieMapper.fromLocalDataBase(it) }
     }
 
     override fun getById(id: Int): Single<MovieLocal> {
@@ -42,14 +41,17 @@ class MovieRepositoryImpl : MovieRepository {
     }
 
     override fun getByMovieGroup(group: String): Single<List<MovieLocal>> {
-        return moviesDB.getMovieDao().getByMovieGroup(group).map {it-> it.map {movieMapper.fromLocalDataBase(it)}}
+        return moviesDB.getMovieDao().getByMovieGroup(group)
+            .map { movieMapper.fromLocalDataBase(it) }
     }
 
     override fun getFavouriteMovies(): Single<List<MovieLocal>> {
-        return moviesDB.getMovieDao().getFavouriteMovies().map {it-> it.map {movieMapper.fromLocalDataBase(it)}}
+        return moviesDB.getMovieDao().getFavouriteMovies()
+            .map { movieMapper.fromLocalDataBase(it) }
     }
 
     override fun search(searchQuery: String): Single<List<MovieLocal>> {
-        return moviesDB.getMovieDao().search(searchQuery).map {it-> it.map {movieMapper.fromLocalDataBase(it)}}
+        return moviesDB.getMovieDao().search(searchQuery)
+            .map { movieMapper.fromLocalDataBase(it) }
     }
 }
