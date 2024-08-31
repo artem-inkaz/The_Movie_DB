@@ -16,9 +16,11 @@ import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
+import ru.androidschool.intensiv.data.mappers.fromApiToMovieGenreDomain
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.domain.MovieGenre
 import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
@@ -67,7 +69,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         }
         val moviesGroupList = mutableListOf<MainCardContainer>()
         val moviesLocalGroupList = mutableListOf<MovieLocal>()
-
+        val movieGenreList = mutableListOf<List<MovieGenre>>()
         val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
         val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
         val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
@@ -75,6 +77,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         disposables.add(
             Single.zip(getNowPlayingMovies, getUpComingMovies, getPopularMovies,
                 Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
+
                     val nowPlayingMoviesList = getMoviesGroupList(
                         context = requireContext(),
                         title = R.string.now_playing,
@@ -91,6 +94,13 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                         }
                         moviesLocalGroupList.addAll(nowPlayingMoviesLocalList)
                         moviesGroupList.add(it)
+
+                        val nowPlayingMoviesGenre = nowPlayingMovies.results.map { movie ->
+                            movie.genre_ids.map { genre ->
+                                fromApiToMovieGenreDomain(genre, movie.id)
+                            }
+                        }
+                        movieGenreList.addAll(nowPlayingMoviesGenre)
                     }
 
                     val upComingMoviesList = getMoviesGroupList(
@@ -109,6 +119,13 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                         }
                         moviesLocalGroupList.addAll(upComingMoviesLocalList)
                         moviesGroupList.add(it)
+
+                        val upComingMoviesGenre = upComingMovies.results.map { movie ->
+                            movie.genre_ids.map { genre ->
+                                fromApiToMovieGenreDomain(genre, movie.id)
+                            }
+                        }
+                        movieGenreList.addAll(upComingMoviesGenre)
                     }
 
                     val popularMoviesList = getMoviesGroupList(
@@ -127,6 +144,13 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                         }
                         moviesLocalGroupList.addAll(popularMoviesLocalList)
                         moviesGroupList.add(it)
+
+                        val popularMoviesGenre = upComingMovies.results.map { movie ->
+                            movie.genre_ids.map { genre ->
+                                fromApiToMovieGenreDomain(genre, movie.id)
+                            }
+                        }
+                        movieGenreList.addAll(popularMoviesGenre)
                     } == true
 
                 })
@@ -140,6 +164,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                     Completable.fromAction {
                         RepositoryHolder.repositoryMovie().insertAll(moviesLocalGroupList)
+                        movieGenreList.forEach { movieGenre ->
+                            RepositoryHolder.repositoryMovieGenre().addAll(movieGenre)
+                        }
                     }.applySchedulers()
                         .subscribe()
                 }

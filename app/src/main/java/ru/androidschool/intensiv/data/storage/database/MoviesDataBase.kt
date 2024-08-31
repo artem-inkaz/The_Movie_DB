@@ -3,7 +3,10 @@ package ru.androidschool.intensiv.data.storage.database
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.MovieFinderApp
+import ru.androidschool.intensiv.data.storage.converters.GenreConverters
 import ru.androidschool.intensiv.data.storage.dao.ActorDao
 import ru.androidschool.intensiv.data.storage.dao.GenreDao
 import ru.androidschool.intensiv.data.storage.dao.MovieActorDao
@@ -19,9 +22,10 @@ import ru.androidschool.utils.Constants.DATABASE_NAME
 @Database(
     entities = [MovieEntity::class, ActorEntity::class, GenreEntity::class,
         MovieActorEntity::class, MovieGenreEntity::class],
-    version = 1,
+    version = 3,
     exportSchema = false
 )
+@TypeConverters(GenreConverters::class)
 abstract class MoviesDataBase : RoomDatabase() {
 
     abstract fun getMovieDao(): MovieDao
@@ -37,7 +41,11 @@ abstract class MoviesDataBase : RoomDatabase() {
                 MovieFinderApp.context(),
                 MoviesDataBase::class.java,
                 DATABASE_NAME
-            )
+            ).apply {
+                if (BuildConfig.DEBUG) {
+                    fallbackToDestructiveMigration()
+                }
+            }
                 .build()
         }
     }

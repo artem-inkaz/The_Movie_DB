@@ -24,8 +24,12 @@ class MovieGenreRepositoryImpl : MovieGenreRepository {
         return moviesDB.getMovieGenreDao().getAll().map { movieGenreMapper.fromLocalDataBase(it) }
     }
 
-    override fun add(moveAndActor: MovieGenre): Completable {
-        return moviesDB.getMovieGenreDao().add(movieGenreMapper.toLocalDataBase(moveAndActor))
+    override fun add(moveAndGenre: MovieGenre): Completable {
+        return moviesDB.getMovieGenreDao().add(movieGenreMapper.toLocalDataBase(moveAndGenre))
+    }
+
+    override fun addAll(moveAndGenre: List<MovieGenre>) {
+        return moviesDB.getMovieGenreDao().addAll(movieGenreMapper.toLocalDataBase(moveAndGenre))
     }
 
     override fun delete(moveAndActor: MovieGenre): Completable {

@@ -1,7 +1,6 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.domain.Actor
 import ru.androidschool.intensiv.data.response.moveidcredits.Cast as InActor
 import ru.androidschool.intensiv.data.storage.entities.ActorEntity as InActorStorage
 import ru.androidschool.intensiv.domain.Actor as OutActor
@@ -33,7 +32,7 @@ class ActorMapper : MapperDomain.Base<InActorStorage, OutActor> {
 class ActorMapperDto : MapperDomain.ViewObjectMapper<OutActor, InActor> {
 
     override fun toViewObject(dto: InActor): OutActor = with(dto) {
-        return Actor(
+        return OutActor(
             id = id,
             name = name,
             profile_path = profilePath,

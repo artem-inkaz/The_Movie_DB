@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.base.MapperDomain
+import ru.androidschool.intensiv.data.response.moveid.Genre as InGenre
 import ru.androidschool.intensiv.domain.Genre as OutGenre
 import ru.androidschool.intensiv.data.storage.entities.GenreEntity as InGenreStorage
 
@@ -24,4 +25,17 @@ class GenreMapper : MapperDomain.Base<InGenreStorage, OutGenre> {
 
     override fun fromLocalDataBase(dto: Collection<InGenreStorage>): List<OutGenre> =
         dto.map { fromLocalDataBase(it) }
+}
+
+class GenreMapperDto : MapperDomain.ViewObjectMapper<OutGenre, InGenre> {
+
+    override fun toViewObject(dto: InGenre): OutGenre = with(dto) {
+        return OutGenre(
+            id = id,
+            name = name
+        )
+    }
+
+    override fun toViewObject(dto: Collection<InGenre>): List<OutGenre> =
+        dto.map { toViewObject(it) }
 }

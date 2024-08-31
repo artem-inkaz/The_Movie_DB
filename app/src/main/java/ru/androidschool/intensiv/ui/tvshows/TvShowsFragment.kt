@@ -10,9 +10,9 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
-import ru.androidschool.intensiv.domain.TvShowsLocal
 import ru.androidschool.intensiv.data.mappers.TvShowsMapper
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
+import ru.androidschool.intensiv.domain.TvShowsLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.network.MovieApiClient
 import timber.log.Timber

@@ -9,10 +9,12 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Completable
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.mappers.ActorMapperDto
+import ru.androidschool.intensiv.data.mappers.GenreMapperDto
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.data.response.moveid.MovieId
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.domain.Actor
+import ru.androidschool.intensiv.domain.Genre
 import ru.androidschool.intensiv.domain.MovieActor
 import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.applySchedulers
@@ -58,17 +60,23 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     private fun showMovieDetail(movie: MovieLocal) = with(binding) {
         val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(movie.id))
-//        val getMovieActors = MovieApiClient.apiClient.getMovieIdCredits(MovieId(movie.id))
+        val genresDomainList = mutableListOf<Genre>()
         disposables.add(
-//            Single.zip(getMovieDetails,getMovieActors,
-//            BiFunction { details, actor ->
-//                details.
-//            })
             getMovieDetails
                 .applySchedulers()
+                .doFinally {
+                    Completable.fromAction {
+                        RepositoryHolder.repositoryGenre().addAll(genresDomainList)
+                    }.applySchedulers()
+                        .subscribe()
+                }
                 .subscribe(
                     { result ->
                         result?.let { it ->
+                            genresDomainList.addAll(it.genres.map {
+                                GenreMapperDto().toViewObject(it)
+                            })
+
                             title.text = it.title
                             movieRating.rating = voteAverage(it.voteAverage)
                             moveDescription.text = it.overview
@@ -103,10 +111,6 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                         RepositoryHolder.repositoryMovieActor().addAll(movieActorsDomainList)
                     }.applySchedulers()
                         .subscribe()
-//                    Completable.fromAction {
-//                        RepositoryHolder.repositoryMovieActor().addAll(movieActorsDomainList)
-//                    }.applySchedulers()
-//                        .subscribe()
                 }
                 .subscribe(
                     { result ->

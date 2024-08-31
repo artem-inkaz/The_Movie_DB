@@ -6,7 +6,8 @@ import ru.androidschool.intensiv.domain.Genre
 
 interface GenreRepository {
     fun getAll(): Single<List<Genre>>
-    fun add(genre: Genre): Completable
+    fun add(genre: Genre)
+    fun addAll(genre: List<Genre>)
     fun update(genre: Genre): Completable
     fun delete(genre: Genre): Completable
 }

@@ -24,7 +24,7 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentWatchlistBinding {
-       return FragmentWatchlistBinding.inflate(inflater, container, false)
+        return FragmentWatchlistBinding.inflate(inflater, container, false)
     }
 
     private val adapter by lazy {
@@ -50,16 +50,16 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
     }
 
     private fun getFavouritesFilm() = with(binding) {
-        val movieList =  RepositoryHolder.repositoryMovie().getFavouriteMovies()
+        val movieList = RepositoryHolder.repositoryMovie().getFavouriteMovies()
         disposables.add(
             movieList
                 .applySchedulers()
-                .subscribe (
+                .subscribe(
                     {
-                      val moviesList =  it.map {
+                        val moviesList = it.map {
                             MoviePreviewItem(
                                 it
-                            ) { movie -> openMovieDetails(movie)}
+                            ) { movie -> openMovieDetails(movie) }
                         }.distinct().toList()
                         adapter.clear()
                         binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
@@ -79,6 +79,7 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
 
     companion object {
         const val TAG = "ProfileFragment"
+
         @JvmStatic
         fun newInstance() = WatchlistFragment()
     }

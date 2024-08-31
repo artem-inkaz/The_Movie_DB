@@ -16,7 +16,10 @@ interface GenreDao {
     fun getAll(): Single<List<GenreEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(link: GenreEntity): Completable
+    fun add(link: GenreEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addAll(link: List<GenreEntity>)
 
     @Update
     fun update(link: GenreEntity): Completable

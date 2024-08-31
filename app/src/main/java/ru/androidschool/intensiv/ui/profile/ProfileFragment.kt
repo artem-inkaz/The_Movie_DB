@@ -6,8 +6,6 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
@@ -16,7 +14,6 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
-import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.extensions.applySchedulers
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
@@ -33,7 +30,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private var profilePageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            if(position == 0){
+            if (position == 0) {
                 getFavouritesFilm()
             } else {
                 countFavourite = 0
@@ -65,18 +62,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     }
 
     private fun getFavouritesFilm() = with(binding) {
-      val movieList =  RepositoryHolder.repositoryMovie().getFavouriteMovies()
+        val movieList = RepositoryHolder.repositoryMovie().getFavouriteMovies()
         disposables.add(
             movieList
                 .applySchedulers()
-                .subscribe (
+                .subscribe(
                     {
                         countFavourite = it.size
-                        TabLayoutMediator(binding.tabLayout, binding.profileViewPager) { tab, position ->
+                        TabLayoutMediator(
+                            binding.tabLayout,
+                            binding.profileViewPager
+                        ) { tab, position ->
                             // Выделение первой части заголовка таба
                             // Название таба
                             var title = profileTabLayoutTitles[position]
-                            title = "${countFavourite} ${title.substring(title.lastIndexOf("\n")+1)}"
+                            title =
+                                "${countFavourite} ${title.substring(title.lastIndexOf("\n") + 1)}"
                             // Раздеряем название на части. Первый элемент будет кол-во
                             val parts = title.split(" ")
                             val number = parts[0]
@@ -93,11 +94,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 )
         )
     }
-
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
 
     companion object {
         const val TAG = "ProfileFragment"
