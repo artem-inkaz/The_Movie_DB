@@ -1,22 +1,13 @@
 plugins {
-    id("com.android.application") //version '8.1.4' apply false
-//    id("kotlin-android")
-//    id("com.android.library")
+    id("com.android.application")
     id("org.jetbrains.kotlin.android")
-//    id("com.google.devtools.ksp") //version "1.9.24-1.0.20"
     id("androidx.room")
     id("kotlinx-serialization")
     id("kotlin-kapt")
     id("kotlin-parcelize")
 }
-//apply plugin: 'com.android.application'
-//apply plugin: 'kotlin-android'
-//apply plugin: 'kotlinx-serialization'
-//apply plugin:  'com.google.devtools.ksp' //version "1.9.0-1.0.11"
-//apply plugin:  'androidx.room' //version "$rootProject.roomVersion" apply false
 
 //apply from: "../ktlint.gradle"
-
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -39,11 +30,6 @@ android {
     room {
         schemaDirectory "$projectDir/schemas"
     }
-    // Для написания тестов миграции необходимо указать где будет хранится схема БД
-//    sourceSets {
-//        // Adds exported schema location as test app assets.
-//        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
-//    }
     buildTypes {
         debug {
             testCoverageEnabled true
@@ -128,15 +114,11 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.adapterRxjava2"
 
     //Room
-    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-//    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-testing:$rootProject.roomVersion"
-//    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
-//    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
-    testImplementation  "androidx.room:room-testing:$rootProject.roomVersion"
+    testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
 }
