@@ -9,26 +9,26 @@ import ru.androidschool.intensiv.domain.repository.GenreRepository
 
 class GenreRepositoryImpl : GenreRepository {
 
-    private val moviesDB = MoviesDataBase.instance//MovieFinderApp.database
+    private val moviesDB = MoviesDataBase.instance.getGenreDao()
     private val genreMapper = GenreMapper()
 
     override fun getAll(): Single<List<Genre>> {
-        return moviesDB.getGenreDao().getAll().map { genreMapper.fromLocalDataBase(it) }
+        return moviesDB.getAll().map { genreMapper.fromLocalDataBase(it) }
     }
 
     override fun add(genre: Genre) {
-        return moviesDB.getGenreDao().add(genreMapper.toLocalDataBase(genre))
+        return moviesDB.add(genreMapper.toLocalDataBase(genre))
     }
 
     override fun addAll(genre: List<Genre>) {
-        return moviesDB.getGenreDao().addAll(genreMapper.toLocalDataBase(genre))
+        return moviesDB.addAll(genreMapper.toLocalDataBase(genre))
     }
 
     override fun update(genre: Genre): Completable {
-        return moviesDB.getGenreDao().update(genreMapper.toLocalDataBase(genre))
+        return moviesDB.update(genreMapper.toLocalDataBase(genre))
     }
 
     override fun delete(genre: Genre): Completable {
-        return moviesDB.getGenreDao().delete(genreMapper.toLocalDataBase(genre))
+        return moviesDB.delete(genreMapper.toLocalDataBase(genre))
     }
 }

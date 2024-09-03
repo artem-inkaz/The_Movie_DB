@@ -13,5 +13,6 @@ interface MovieRepository {
     fun getById(id: Int): Single<MovieLocal>
     fun getByMovieGroup(group: String): Single<List<MovieLocal>>
     fun getFavouriteMovies(): Single<List<MovieLocal>>
+    fun getFavouriteMoviesById(id: Int): Single<Boolean>
     fun search(searchQuery: String): Single<List<MovieLocal>>
 }

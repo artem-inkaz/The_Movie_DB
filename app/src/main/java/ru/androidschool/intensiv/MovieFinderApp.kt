@@ -10,7 +10,7 @@ class MovieFinderApp : Application() {
         super.onCreate()
         instance = this
         // для БД
-        context = this
+        appContext = this
         initDebugTools()
     }
     private fun initDebugTools() {
@@ -27,7 +27,7 @@ class MovieFinderApp : Application() {
         var instance: MovieFinderApp? = null
             private set
 
-        lateinit var context: Context
-        fun context(): Context = context ?: throw IllegalStateException()
+       lateinit var appContext: Context
+        fun context(): Context = appContext ?: throw IllegalStateException()
     }
 }

@@ -9,31 +9,31 @@ import ru.androidschool.intensiv.domain.repository.MovieGenreRepository
 
 class MovieGenreRepositoryImpl : MovieGenreRepository {
 
-    private val moviesDB = MoviesDataBase.instance//MovieFinderApp.database
+    private val moviesDB = MoviesDataBase.instance.getMovieGenreDao()
     private val movieGenreMapper = MovieAndGenreMapper()
 
     override fun getAll(): Single<List<MovieGenre>> {
-        return moviesDB.getMovieGenreDao().getAll().map { movieGenreMapper.fromLocalDataBase(it) }
+        return moviesDB.getAll().map { movieGenreMapper.fromLocalDataBase(it) }
     }
 
     override fun getByMovieId(moveId: String): Single<List<MovieGenre>> {
-        return moviesDB.getMovieGenreDao().getAll().map { movieGenreMapper.fromLocalDataBase(it) }
+        return moviesDB.getAll().map { movieGenreMapper.fromLocalDataBase(it) }
     }
 
     override fun getByGenreId(genreId: Long): Single<List<MovieGenre>> {
-        return moviesDB.getMovieGenreDao().getAll().map { movieGenreMapper.fromLocalDataBase(it) }
+        return moviesDB.getAll().map { movieGenreMapper.fromLocalDataBase(it) }
     }
 
     override fun add(moveAndGenre: MovieGenre): Completable {
-        return moviesDB.getMovieGenreDao().add(movieGenreMapper.toLocalDataBase(moveAndGenre))
+        return moviesDB.add(movieGenreMapper.toLocalDataBase(moveAndGenre))
     }
 
     override fun addAll(moveAndGenre: List<MovieGenre>) {
-        return moviesDB.getMovieGenreDao().addAll(movieGenreMapper.toLocalDataBase(moveAndGenre))
+        return moviesDB.addAll(movieGenreMapper.toLocalDataBase(moveAndGenre))
     }
 
     override fun delete(moveAndActor: MovieGenre): Completable {
-        return moviesDB.getMovieGenreDao().add(movieGenreMapper.toLocalDataBase(moveAndActor))
+        return moviesDB.add(movieGenreMapper.toLocalDataBase(moveAndActor))
     }
 
     override fun delete(moveId: String, actorId: Long): Completable {

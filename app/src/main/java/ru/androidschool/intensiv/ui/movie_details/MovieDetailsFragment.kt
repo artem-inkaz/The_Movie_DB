@@ -52,7 +52,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                 movieDetail = movie
                 showMovieDetail(movie)
                 showActors(movie.id)
-                binding.movieFavourite.isChecked = movie.like
+                checkFavouriteMovieFromStorage(movie.id)
             }
         }
         checkFavouriteMovie()
@@ -160,6 +160,19 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                 )
             }
         }
+    }
+
+    private fun checkFavouriteMovieFromStorage(moveId: Int) {
+        val getMovieFavourite = RepositoryHolder.repositoryMovie().getFavouriteMoviesById((moveId))
+        disposables.add(
+            getMovieFavourite
+                .applySchedulers()
+                .subscribe(
+                    { result ->
+                        binding.movieFavourite.isChecked = result
+                    },
+                    { Timber.tag(TvShowsFragment.TAG).d("Error subscribe: %s", it.message) }
+                ))
     }
 
     companion object {

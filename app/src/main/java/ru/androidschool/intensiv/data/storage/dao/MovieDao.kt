@@ -75,4 +75,8 @@ interface MovieDao {
             ORDER BY ${MovieEntity.TITLE} DESC
             """)
     fun search(searchQuery: String): Single<List<MovieEntity>>
+
+    @Transaction
+    @Query("SELECT EXISTS (SELECT 1 FROM ${MovieEntity.TABLE_NAME} WHERE ${MovieEntity.MOVIE_ID} =:movieId)")
+    fun existFavouriteMovie(movieId: Int): Single<Boolean>
 }
