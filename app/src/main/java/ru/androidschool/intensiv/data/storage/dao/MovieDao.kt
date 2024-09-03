@@ -77,6 +77,6 @@ interface MovieDao {
     fun search(searchQuery: String): Single<List<MovieEntity>>
 
     @Transaction
-    @Query("SELECT EXISTS (SELECT 1 FROM ${MovieEntity.TABLE_NAME} WHERE ${MovieEntity.MOVIE_ID} =:movieId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM ${MovieEntity.TABLE_NAME} WHERE ${MovieEntity.MOVIE_ID} =:movieId AND ${MovieEntity.LIKE} = 1)")
     fun existFavouriteMovie(movieId: Int): Single<Boolean>
 }
