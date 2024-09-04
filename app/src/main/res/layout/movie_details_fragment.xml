@@ -118,6 +118,8 @@
             android:text="With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man."
             android:textColor="@color/textColorGrey"
             android:textSize="18sp" />
-        <include layout="@layout/item_list_actor" />
+        <include
+            android:id="@+id/list_actors"
+            layout="@layout/item_list_actor" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

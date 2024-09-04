@@ -21,7 +21,7 @@
     <string name="close">закрыть</string>
 
     <string-array name="tab_titles">
-        <item>23\n Понравилось</item>
+        <item>%1$s\n Понравилось</item>
         <item>@string/later</item>
     </string-array>
 

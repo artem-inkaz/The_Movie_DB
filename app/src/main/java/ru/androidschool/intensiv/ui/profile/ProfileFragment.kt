@@ -6,42 +6,36 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.base.BaseFragment
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
+import ru.androidschool.intensiv.extensions.applySchedulers
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private lateinit var profileTabLayoutTitles: Array<String>
 
-    private var _binding: FragmentProfileBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var countFavourite = 0
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentProfileBinding {
+        return FragmentProfileBinding.inflate(inflater, container, false)
+    }
 
     private var profilePageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            Toast.makeText(
-                requireContext(),
-                "Selected position: $position",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (position == 0) {
+                getFavouritesFilm()
+            } else {
+                countFavourite = 0
+            }
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,29 +53,49 @@ class ProfileFragment : Fragment() {
             this,
             profileTabLayoutTitles.size
         )
+
         binding.profileViewPager.adapter = profileAdapter
 
         binding.profileViewPager.registerOnPageChangeCallback(
             profilePageChangeCallback
         )
-
-        TabLayoutMediator(binding.tabLayout, binding.profileViewPager) { tab, position ->
-
-            // Выделение первой части заголовка таба
-            // Название таба
-            val title = profileTabLayoutTitles[position]
-            // Раздеряем название на части. Первый элемент будет кол-во
-            val parts = profileTabLayoutTitles[position].split(" ")
-            val number = parts[0]
-            val spannableStringTitle = SpannableString(title)
-            spannableStringTitle.setSpan(RelativeSizeSpan(2f), 0, number.count(), 0)
-
-            tab.text = spannableStringTitle
-        }.attach()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun getFavouritesFilm() = with(binding) {
+        val movieList = RepositoryHolder.repositoryMovie().getFavouriteMovies()
+        disposables.add(
+            movieList
+                .applySchedulers()
+                .subscribe(
+                    {
+                        countFavourite = it.size
+                        TabLayoutMediator(
+                            binding.tabLayout,
+                            binding.profileViewPager
+                        ) { tab, position ->
+                            // Выделение первой части заголовка таба
+                            // Название таба
+                            var title = profileTabLayoutTitles[position]
+                            title =
+                                "${countFavourite} ${title.substring(title.lastIndexOf("\n") + 1)}"
+                            // Раздеряем название на части. Первый элемент будет кол-во
+                            val parts = title.split(" ")
+                            val number = parts[0]
+                            val spannableStringTitle = SpannableString(title)
+                            spannableStringTitle.setSpan(RelativeSizeSpan(2f), 0, number.count(), 0)
+
+                            tab.text = spannableStringTitle
+                        }.attach()
+
+                    },
+                    {
+
+                    }
+                )
+        )
+    }
+
+    companion object {
+        const val TAG = "ProfileFragment"
     }
 }

@@ -3,8 +3,8 @@ package ru.androidschool.intensiv.ui.feed
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MovieLocal
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
+import ru.androidschool.intensiv.domain.MovieLocal
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 

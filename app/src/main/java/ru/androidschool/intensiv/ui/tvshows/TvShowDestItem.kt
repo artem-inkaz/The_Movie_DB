@@ -3,8 +3,8 @@ package ru.androidschool.intensiv.ui.tvshows
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.TvShowsLocal
 import ru.androidschool.intensiv.databinding.ItemTvShowsDestBinding
+import ru.androidschool.intensiv.domain.TvShowsLocal
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 

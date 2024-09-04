@@ -1,13 +1,17 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlinx-serialization'
-apply from: "../ktlint.gradle"
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("androidx.room")
+    id("kotlinx-serialization")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
+}
 
+//apply from: "../ktlint.gradle"
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 
 
 android {
@@ -15,13 +19,16 @@ android {
         applicationId "ru.androidschool.intensiv"
         minSdkVersion 21
         targetSdkVersion 34
-        compileSdkVersion 34
+        compileSdk 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
         buildConfigField 'String', 'ACCESS_TOKEN_API', keystoreProperties['ACCESS_TOKEN_API']
+    }
+    room {
+        schemaDirectory "$projectDir/schemas"
     }
     buildTypes {
         debug {
@@ -105,4 +112,13 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid"
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.adapterRxjava2"
+
+    //Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation "androidx.room:room-testing:$rootProject.roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
+    testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
 }
