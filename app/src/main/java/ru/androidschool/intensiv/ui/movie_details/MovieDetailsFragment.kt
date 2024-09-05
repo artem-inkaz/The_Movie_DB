@@ -34,7 +34,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     // Для загрузки из MovieList
     private var movieIdBundle by Delegates.notNull<MovieLocal>()
-    lateinit var movieDetail: MovieLocal
+    private lateinit var movieDetail: MovieLocal
 
     override fun createViewBinding(
         inflater: LayoutInflater,

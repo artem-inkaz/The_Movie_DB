@@ -19,6 +19,8 @@ import ru.androidschool.intensiv.network.MovieApiClient
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.intensiv.ui.watchlist.WatchlistFragment
+import ru.androidschool.intensiv.ui.watchlist.WatchlistFragment.Companion
 import timber.log.Timber
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
@@ -40,7 +42,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
             popExit = R.anim.slide_out_right
         }
     }
-    var movieList: Set<MovieItem> = setOf()
+    private var movieList: Set<MovieItem> = setOf()
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -86,7 +88,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
                         addAll(movieList)
                     }
                 },
-                    { Timber.e("Error: ${it.message}") }
+                    { Timber.tag(TAG).d("Error: %s", it.message) }
                 )
         )
     }

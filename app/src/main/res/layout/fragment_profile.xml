@@ -46,21 +46,25 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/big_wave"
                 android:src="@drawable/ic_wave_big" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/wave_third"
                 android:src="@drawable/ic_wave_third" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/wave_second"
                 android:src="@drawable/ic_wave_second" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/wave"
                 android:src="@drawable/ic_wave" />
         </FrameLayout>
 

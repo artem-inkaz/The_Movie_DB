@@ -8,7 +8,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Completable
 import io.reactivex.Single
-import kotlinx.coroutines.flow.Flow
 import ru.androidschool.intensiv.data.storage.entities.GenreEntity
 import ru.androidschool.intensiv.data.storage.entities.GenreWithMovie
 import ru.androidschool.intensiv.data.storage.entities.MovieGenreEntity
