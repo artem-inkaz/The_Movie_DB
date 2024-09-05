@@ -26,6 +26,7 @@
             android:inputType="textShortMessage"
             android:labelFor="@+id/search"
             android:maxLines="1"
+            android:hint="@string/seach_edit_text"
             android:paddingStart="@dimen/material_margin_small"
             android:paddingEnd="@dimen/material_margin_small"
             android:singleLine="true"

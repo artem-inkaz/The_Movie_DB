@@ -4,7 +4,6 @@
     <string name="search_hint">Введите название</string>
 
     <string name="main_title">Что будете смотреть\nсегодня?</string>
-    <string name="recommended">Рекомендуем</string>
     <string name="popular">Популярные</string>
     <string name="upcoming">Новинки</string>
     <string name="now_playing">Сейчас в кино</string>
@@ -25,6 +24,14 @@
         <item>@string/later</item>
     </string-array>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="placeholder">Пёс Киноман</string>
+    <string name="show">Смотреть</string>
+    <string name="sample_description">With Spider-Man\'s identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man.</string>
+    <string name="big_wave">big_wave</string>
+    <string name="wave_third">wave_third</string>
+    <string name="wave_second">wave_second</string>
+    <string name="wave">wave</string>
+    <string name="move_poster">move poster</string>
+    <string name="button_back">button back</string>
+    <string name="seach_edit_text">seach edit text</string>
 </resources>

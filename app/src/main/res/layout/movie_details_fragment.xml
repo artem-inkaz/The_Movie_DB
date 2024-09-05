@@ -27,6 +27,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/move_poster"
                 tools:src="@drawable/ic_avatar" />
             <ImageView
                 android:id="@+id/back"
@@ -36,6 +37,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="@dimen/material_margin_normal_XL"
                 android:layout_marginStart="@dimen/material_margin_normal_XL"
+                android:contentDescription="@string/button_back"
                 android:src="@drawable/path"/>
         </RelativeLayout>
 
@@ -90,7 +92,7 @@
                 android:background="@drawable/button_shape"
                 android:textAllCaps="false"
                 android:textSize="18sp"
-                android:text="Смотреть"
+                android:text="@string/show"
                 android:textColor="@color/white" />
 
             <androidx.appcompat.widget.AppCompatRatingBar
@@ -115,7 +117,7 @@
             android:layout_marginTop="@dimen/material_margin_normal_XL"
             android:layout_marginEnd="@dimen/material_margin_normal_XL"
             android:fontFamily="@font/mulish_regular"
-            android:text="With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear, forcing Peter to discover what it truly means to be Spider-Man."
+            android:text="@string/sample_description"
             android:textColor="@color/textColorGrey"
             android:textSize="18sp" />
         <include
