@@ -15,6 +15,7 @@ import ru.androidschool.intensiv.base.BaseFragment
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
 import ru.androidschool.intensiv.extensions.applySchedulers
+import timber.log.Timber
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
@@ -70,8 +71,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                     {
                         countFavourite = it.size
                         TabLayoutMediator(
-                            binding.tabLayout,
-                            binding.profileViewPager
+                            tabLayout,
+                            profileViewPager
                         ) { tab, position ->
                             // Выделение первой части заголовка таба
                             // Название таба
@@ -89,7 +90,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
                     },
                     {
-
+                        Timber.tag(TAG).d("Error doOnError: %s", it.message)
                     }
                 )
         )

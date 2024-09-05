@@ -86,9 +86,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     )
 
                     nowPlayingMoviesList?.let {
-                        val nowPlayingMoviesLocalList = nowPlayingMovies.results.map {
+                        val nowPlayingMoviesLocalList = nowPlayingMovies.results.map {  movie ->
                             fromApiToMovieDomain(
-                                it,
+                                movie,
                                 requireContext().getString(R.string.now_playing)
                             )
                         }
@@ -111,9 +111,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     )
 
                     upComingMoviesList?.let {
-                        val upComingMoviesLocalList = upComingMovies.results.map {
+                        val upComingMoviesLocalList = upComingMovies.results.map { movie ->
                             fromApiToMovieDomain(
-                                it,
+                                movie,
                                 requireContext().getString(R.string.upcoming)
                             )
                         }
@@ -136,9 +136,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     )
 
                     popularMoviesList?.let {
-                        val popularMoviesLocalList = popularMovies.results.map {
+                        val popularMoviesLocalList = popularMovies.results.map { movie ->
                             fromApiToMovieDomain(
-                                it,
+                                movie,
                                 requireContext().getString(R.string.popular)
                             )
                         }

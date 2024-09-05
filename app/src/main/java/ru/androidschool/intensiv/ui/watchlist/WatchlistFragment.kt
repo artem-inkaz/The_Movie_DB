@@ -56,13 +56,13 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
                 .applySchedulers()
                 .subscribe(
                     {
-                        val moviesList = it.map {
+                        val moviesList = it.map { movie ->
                             MoviePreviewItem(
-                                it
+                                movie
                             ) { movie -> openMovieDetails(movie) }
                         }.distinct().toList()
                         adapter.clear()
-                        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+                        moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
                     },
                     {
                         Timber.tag(TAG).d("Error doOnError: %s", it.message)

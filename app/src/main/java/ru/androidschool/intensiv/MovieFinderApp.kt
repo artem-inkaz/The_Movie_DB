@@ -28,6 +28,6 @@ class MovieFinderApp : Application() {
             private set
 
        lateinit var appContext: Context
-        fun context(): Context = appContext ?: throw IllegalStateException()
+        fun context(): Context = appContext ?: throw IllegalStateException("context not found")
     }
 }

@@ -7,10 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import io.reactivex.Completable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.storage.entities.MovieEntity
-import ru.androidschool.intensiv.data.response.moveid.MovieId
 
 @Dao
 interface MovieDao {
