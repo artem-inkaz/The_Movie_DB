@@ -12,17 +12,19 @@ import ru.androidschool.intensiv.data.storage.dao.GenreDao
 import ru.androidschool.intensiv.data.storage.dao.MovieActorDao
 import ru.androidschool.intensiv.data.storage.dao.MovieDao
 import ru.androidschool.intensiv.data.storage.dao.MovieGenreDao
+import ru.androidschool.intensiv.data.storage.dao.TvShowsDao
 import ru.androidschool.intensiv.data.storage.entities.ActorEntity
 import ru.androidschool.intensiv.data.storage.entities.GenreEntity
 import ru.androidschool.intensiv.data.storage.entities.MovieActorEntity
 import ru.androidschool.intensiv.data.storage.entities.MovieEntity
 import ru.androidschool.intensiv.data.storage.entities.MovieGenreEntity
+import ru.androidschool.intensiv.data.storage.entities.TvShowsEntity
 import ru.androidschool.utils.Constants.DATABASE_NAME
 
 @Database(
     entities = [MovieEntity::class, ActorEntity::class, GenreEntity::class,
-        MovieActorEntity::class, MovieGenreEntity::class],
-    version = 3,
+        MovieActorEntity::class, MovieGenreEntity::class, TvShowsEntity::class],
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(GenreConverters::class)
@@ -33,7 +35,7 @@ abstract class MoviesDataBase : RoomDatabase() {
     abstract fun getGenreDao(): GenreDao
     abstract fun getMovieActorDao(): MovieActorDao
     abstract fun getMovieGenreDao(): MovieGenreDao
-
+    abstract fun getTvShowsDao(): TvShowsDao
 
     companion object {
         val instance: MoviesDataBase by lazy {

@@ -1,8 +1,8 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
+import ru.androidschool.intensiv.core.base.MapperDomain
 import ru.androidschool.intensiv.data.storage.entities.MovieGenreEntity as InData
-import ru.androidschool.intensiv.domain.MovieGenre as OutData
+import ru.androidschool.intensiv.data.vo.MovieGenre as OutData
 
 class MovieAndGenreMapper : MapperDomain.Base<InData, OutData> {
     override fun toLocalDataBase(data: OutData): InData = with(data) {

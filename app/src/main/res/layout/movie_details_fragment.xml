@@ -6,7 +6,7 @@
     android:background="@color/blueDark"
     android:overScrollMode="never"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.androidschool.intensiv.ui.movie_details.MovieDetailsFragment">
+    tools:context="ru.androidschool.intensiv.presentation.movie_details.MovieDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

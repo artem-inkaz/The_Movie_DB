@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.MovieAndGenreMapper
 import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
-import ru.androidschool.intensiv.domain.MovieGenre
+import ru.androidschool.intensiv.data.vo.MovieGenre
 import ru.androidschool.intensiv.domain.repository.MovieGenreRepository
 
 class MovieGenreRepositoryImpl : MovieGenreRepository {
@@ -34,9 +34,5 @@ class MovieGenreRepositoryImpl : MovieGenreRepository {
 
     override fun delete(moveAndActor: MovieGenre): Completable {
         return moviesDB.add(movieGenreMapper.toLocalDataBase(moveAndActor))
-    }
-
-    override fun delete(moveId: String, actorId: Long): Completable {
-        TODO("Not yet implemented")
     }
 }

@@ -1,8 +1,8 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.domain.MovieLocal as OutMovie
-import ru.androidschool.intensiv.data.response.search.MovieSearchResultItem as InMovie
+import ru.androidschool.intensiv.core.base.MapperDomain
+import ru.androidschool.intensiv.data.vo.MovieLocal as OutMovie
+import ru.androidschool.intensiv.data.dto.search.MovieSearchResultItem as InMovie
 
 class MovieSearchResultItemMapper : MapperDomain.ViewObjectMapper<OutMovie, InMovie> {
 

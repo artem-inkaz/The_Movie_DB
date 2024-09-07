@@ -12,7 +12,7 @@ data class ActorEntity(
     @ColumnInfo(name = NAME)
     val name: String,
     @ColumnInfo(name = PROFILE_PATH)
-    val profile_path: String
+    val profilePath: String
 ) {
     companion object {
         const val TABLE_NAME = "actors"

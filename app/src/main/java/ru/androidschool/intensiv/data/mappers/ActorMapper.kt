@@ -1,16 +1,16 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.data.response.moveidcredits.Cast as InActor
+import ru.androidschool.intensiv.core.base.MapperDomain
+import ru.androidschool.intensiv.data.dto.moveidcredits.Cast as InActor
 import ru.androidschool.intensiv.data.storage.entities.ActorEntity as InActorStorage
-import ru.androidschool.intensiv.domain.Actor as OutActor
+import ru.androidschool.intensiv.data.vo.Actor as OutActor
 
 class ActorMapper : MapperDomain.Base<InActorStorage, OutActor> {
     override fun toLocalDataBase(data: OutActor): InActorStorage = with(data) {
         InActorStorage(
             id = id,
             name = name,
-            profile_path = profile_path ?: ""
+            profilePath = profilePath ?: ""
         )
     }
 
@@ -21,7 +21,7 @@ class ActorMapper : MapperDomain.Base<InActorStorage, OutActor> {
         OutActor(
             id = id,
             name = name,
-            profile_path = profile_path
+            profilePath = profilePath
         )
     }
 
@@ -35,7 +35,7 @@ class ActorMapperDto : MapperDomain.ViewObjectMapper<OutActor, InActor> {
         return OutActor(
             id = id,
             name = name,
-            profile_path = profilePath,
+            profilePath = profilePath,
         )
     }
 

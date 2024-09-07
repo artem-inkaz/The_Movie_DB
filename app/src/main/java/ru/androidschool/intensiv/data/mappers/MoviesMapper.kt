@@ -1,8 +1,8 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
+import ru.androidschool.intensiv.core.base.MapperDomain
 import ru.androidschool.intensiv.data.storage.entities.MoviesEntity as InMovies
-import ru.androidschool.intensiv.domain.Movies as OutMovies
+import ru.androidschool.intensiv.data.vo.Movies as OutMovies
 
 class MoviesMapper : MapperDomain.ReadOnly<InMovies, OutMovies> {
 

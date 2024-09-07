@@ -1,8 +1,8 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.data.response.moveid.Genre as InGenre
-import ru.androidschool.intensiv.domain.Genre as OutGenre
+import ru.androidschool.intensiv.core.base.MapperDomain
+import ru.androidschool.intensiv.data.dto.moveid.Genre as InGenre
+import ru.androidschool.intensiv.data.vo.Genre as OutGenre
 import ru.androidschool.intensiv.data.storage.entities.GenreEntity as InGenreStorage
 
 class GenreMapper : MapperDomain.Base<InGenreStorage, OutGenre> {
