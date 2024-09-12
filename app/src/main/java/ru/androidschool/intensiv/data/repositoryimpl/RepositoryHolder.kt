@@ -16,6 +16,8 @@ import ru.androidschool.intensiv.data.mappers.MovieStorageMapper
 import ru.androidschool.intensiv.data.mappers.TvShowsStorageMapper
 import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
+import ru.androidschool.intensiv.domain.usecase.MovieGenreUseCase
+import ru.androidschool.intensiv.domain.usecase.MovieStorageUseCase
 
 object RepositoryHolder {
 
@@ -39,8 +41,17 @@ object RepositoryHolder {
     private val repositoryMovieDetail by lazy { MovieDetailNetworkDataSource(api) }
     fun repositoryMovieDetail(): MovieDetailNetworkDataSource = repositoryMovieDetail
 
-    private val repositoryMovieFromStorage by lazy { MovieStorageRepositoryImpl(moviesDB, movieMapper) }
+    private val repositoryMovieFromStorage by lazy {
+        MovieStorageRepositoryImpl(
+            moviesDB,
+            movieMapper
+        )
+    }
+
     fun repositoryMovieFromStorage(): MovieStorageRepositoryImpl = repositoryMovieFromStorage
+
+    private val useCaseMovieFromStorage by lazy { MovieStorageUseCase(repositoryMovieFromStorage()) }
+    fun useCaseMovieFromStorage(): MovieStorageUseCase = useCaseMovieFromStorage
 
     private val repositoryMovie by lazy { MovieRepositoryImpl() }
     fun repositoryMovie(): MovieRepositoryImpl = repositoryMovie
@@ -48,13 +59,25 @@ object RepositoryHolder {
     private val repositoryActor by lazy { ActorRepositoryImpl() }
     fun repositoryActor(): ActorRepositoryImpl = repositoryActor
 
-    private val repositoryFromStorageActor by lazy { ActorStorageRepositoryImpl(moviesDB, actorMapper) }
+    private val repositoryFromStorageActor by lazy {
+        ActorStorageRepositoryImpl(
+            moviesDB,
+            actorMapper
+        )
+    }
+
     fun repositoryFromStorageActor(): ActorStorageRepositoryImpl = repositoryFromStorageActor
 
     private val repositoryActorFromApi by lazy { ActorsNetworkDataSource(api) }
     fun repositoryActorFromApi(): ActorsNetworkDataSource = repositoryActorFromApi
 
-    private val repositoryFromStorageGenre by lazy { GenreStorageRepositoryImpl(moviesDB, genreMapper) }
+    private val repositoryFromStorageGenre by lazy {
+        GenreStorageRepositoryImpl(
+            moviesDB,
+            genreMapper
+        )
+    }
+
     fun repositoryFromStorageGenre(): GenreStorageRepositoryImpl = repositoryFromStorageGenre
 
     private val repositoryGenre by lazy { GenreRepositoryImpl() }
@@ -66,13 +89,22 @@ object RepositoryHolder {
     private val repositoryMovieGenre by lazy { MovieGenreRepositoryImpl() }
     fun repositoryMovieGenre(): MovieGenreRepositoryImpl = repositoryMovieGenre
 
+    private val useCaseMovieGenre by lazy { MovieGenreUseCase(repositoryMovieGenre()) }
+    fun useCaseMovieGenre(): MovieGenreUseCase = useCaseMovieGenre
+
     private val repositoryMovies by lazy { MoviesRepositoryImpl() }
     fun repositoryMovies(): MoviesRepositoryImpl = repositoryMovies
 
     private val repositoryTvShowsFromApi by lazy { TvShowsNetworkDataSource(api) }
     fun repositoryTvShowsFromApi(): TvShowsNetworkDataSource = repositoryTvShowsFromApi
 
-    private val repositoryTvShowsFromStorage by lazy { TvShowsStorageRepositoryImpl(moviesDB, tvShowsMapper) }
+    private val repositoryTvShowsFromStorage by lazy {
+        TvShowsStorageRepositoryImpl(
+            moviesDB,
+            tvShowsMapper
+        )
+    }
+
     fun repositoryTvShowsFromStorage(): TvShowsStorageRepositoryImpl = repositoryTvShowsFromStorage
 
     private val repositoryTvShows by lazy {

@@ -17,11 +17,11 @@ import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.core.base.BaseFragment
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieGenreDomain
-import ru.androidschool.intensiv.data.network.MovieApiClient
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryNowPlayingMovie
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryPopularMovie
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryUpCommingMovie
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.useCaseMovieFromStorage
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.useCaseMovieGenre
 import ru.androidschool.intensiv.data.vo.MovieGenre
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
@@ -75,7 +75,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         val movieGenreList = mutableListOf<List<MovieGenre>>()
 
         disposables.add(
-            Single.zip(repositoryNowPlayingMovie().getMovies(), repositoryUpCommingMovie().getMovies(), repositoryPopularMovie().getMovies(),
+            Single.zip(repositoryNowPlayingMovie().getMovies(),
+                repositoryUpCommingMovie().getMovies(),
+                repositoryPopularMovie().getMovies(),
                 Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
 
                     val nowPlayingMoviesList = getMoviesGroupList(
@@ -163,9 +165,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
                     binding.progress.visibility = View.GONE
                     binding.moviesRecyclerView.visibility = View.VISIBLE
                     Completable.fromAction {
-                        RepositoryHolder.repositoryMovieFromStorage().insertAll(moviesLocalGroupList)
+                        useCaseMovieFromStorage().invoke(moviesLocalGroupList)
                         movieGenreList.forEach { movieGenre ->
-                            RepositoryHolder.repositoryMovieGenre().addAll(movieGenre)
+                            useCaseMovieGenre().invoke(movieGenre)
                         }
                     }.applySchedulers()
                         .subscribe()
