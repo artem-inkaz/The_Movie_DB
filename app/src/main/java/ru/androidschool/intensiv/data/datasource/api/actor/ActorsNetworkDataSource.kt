@@ -4,9 +4,10 @@ import io.reactivex.Single
 import ru.androidschool.intensiv.data.dto.moveid.MovieId
 import ru.androidschool.intensiv.data.dto.moveidcredits.MoveIdCreditsResponse
 import ru.androidschool.intensiv.data.network.MovieApiClient
+import ru.androidschool.intensiv.data.network.MovieApiInterface
 
-class ActorFromApiImpl : ActorFromApi {
-    override fun getActorsFromMovie(id: MovieId): Single<MoveIdCreditsResponse> {
-        return MovieApiClient.apiClient.getMovieIdCredits(id)
+class ActorsNetworkDataSource(private val apiClient: MovieApiInterface) : ActorsDataSource {
+    override fun getActorsByMovieId(id: MovieId): Single<MoveIdCreditsResponse> {
+        return apiClient.getMovieIdCredits(id)
     }
 }

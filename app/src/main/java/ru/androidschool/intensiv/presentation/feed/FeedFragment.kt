@@ -19,6 +19,9 @@ import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieGenreDomain
 import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryNowPlayingMovie
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryPopularMovie
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryUpCommingMovie
 import ru.androidschool.intensiv.data.vo.MovieGenre
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
@@ -70,12 +73,9 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         val moviesGroupList = mutableListOf<MainCardContainer>()
         val moviesLocalGroupList = mutableListOf<MovieLocal>()
         val movieGenreList = mutableListOf<List<MovieGenre>>()
-        val getNowPlayingMovies = MovieApiClient.apiClient.getNowPlayingMovies()
-        val getUpComingMovies = MovieApiClient.apiClient.getUpComingMovies()
-        val getPopularMovies = MovieApiClient.apiClient.getPopularMovies()
 
         disposables.add(
-            Single.zip(getNowPlayingMovies, getUpComingMovies, getPopularMovies,
+            Single.zip(repositoryNowPlayingMovie().getMovies(), repositoryUpCommingMovie().getMovies(), repositoryPopularMovie().getMovies(),
                 Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
 
                     val nowPlayingMoviesList = getMoviesGroupList(

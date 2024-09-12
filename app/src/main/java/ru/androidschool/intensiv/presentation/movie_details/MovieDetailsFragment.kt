@@ -21,6 +21,7 @@ import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
 import ru.androidschool.intensiv.data.network.MovieApiClient
+import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryMovieDetail
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.presentation.tvshows.TvShowsFragment
 import timber.log.Timber
@@ -59,7 +60,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     }
 
     private fun showMovieDetail(movie: MovieLocal) = with(binding) {
-        val getMovieDetails = MovieApiClient.apiClient.getMovieDetails(MovieId(movie.id))
+        val getMovieDetails = repositoryMovieDetail().getMovieDetails(MovieId(movie.id))
         val genresDomainList = mutableListOf<Genre>()
         disposables.add(
             getMovieDetails
