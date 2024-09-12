@@ -1,9 +1,9 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.data.response.movies.Movie
+import ru.androidschool.intensiv.data.dto.movies.Movie
 import ru.androidschool.intensiv.data.storage.entities.MovieEntity
-import ru.androidschool.intensiv.domain.MovieGenre
-import ru.androidschool.intensiv.domain.MovieLocal
+import ru.androidschool.intensiv.data.vo.MovieGenre
+import ru.androidschool.intensiv.data.vo.MovieLocal
 
 fun fromApiToMovieDomain(movieApi: Movie, movieGroup: String, like: Boolean? = false) = MovieLocal(
     id = movieApi.id,

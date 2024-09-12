@@ -1,13 +1,8 @@
 package ru.androidschool.intensiv.domain.repository
 
-import io.reactivex.Completable
-import io.reactivex.Single
-import ru.androidschool.intensiv.domain.Actor
+import io.reactivex.Observable
+import ru.androidschool.intensiv.data.vo.Actor
 
 interface ActorRepository {
-    fun getAll(): Single<List<Actor>>
-    fun add(actor: Actor): Completable
-    fun addAll(movie: List<Actor>)
-    fun update(actor: Actor): Completable
-    fun delete(actor: Actor): Completable
+    fun getAll(): Observable<List<Actor>>
 }

@@ -1,13 +1,43 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.base.MapperDomain
-import ru.androidschool.intensiv.domain.TvShowsLocal as OutTvShows
-import ru.androidschool.intensiv.data.response.tvseries.TvShows as InTvShows
+import ru.androidschool.intensiv.core.base.MapperDomain
+import ru.androidschool.intensiv.data.dto.tvseries.TvShows as InTvShows
+import ru.androidschool.intensiv.data.storage.entities.TvShowsEntity as InStorageTvShows
+import ru.androidschool.intensiv.data.vo.TvShowsLocal as OutTvShows
 
-class TvShowsMapper : MapperDomain.ViewObjectMapper<OutTvShows, InTvShows> {
+class TvShowsStorageMapper : MapperDomain.Base<InStorageTvShows, OutTvShows>{
+    override fun toLocalDataBase(data: OutTvShows): InStorageTvShows = with(data) {
+        InStorageTvShows(
+            id = id,
+            name = name,
+            voteAverage = voteAverage,
+            backdropPath = backdropPath,
+            posterPath = posterPath
+        )
+    }
+
+    override fun toLocalDataBase(data: Collection<OutTvShows>): List<InStorageTvShows> =
+        data.map { toLocalDataBase(it) }
+
+    override fun fromLocalDataBase(data: InStorageTvShows): OutTvShows = with(data){
+        OutTvShows(
+            id = id,
+            name = name,
+            voteAverage = voteAverage,
+            backdropPath = backdropPath,
+            posterPath = posterPath
+        )
+    }
+
+    override fun fromLocalDataBase(data: Collection<InStorageTvShows>): List<OutTvShows> =
+        data.map { fromLocalDataBase(it) }
+}
+
+class TvShowsMapperDto : MapperDomain.ViewObjectMapper<OutTvShows, InTvShows> {
 
     override fun toViewObject(dto: InTvShows): OutTvShows = with(dto) {
         return OutTvShows(
+            id = id,
                 name = name,
                 voteAverage = voteAverage,
                 backdropPath = backdropPath,

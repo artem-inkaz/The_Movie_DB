@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.MovieAndActorMapper
 import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
-import ru.androidschool.intensiv.domain.MovieActor
+import ru.androidschool.intensiv.data.vo.MovieActor
 import ru.androidschool.intensiv.domain.repository.MovieActorRepository
 
 class MovieActorRepositoryImpl: MovieActorRepository {

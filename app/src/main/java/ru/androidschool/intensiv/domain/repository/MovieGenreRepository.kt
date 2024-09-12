@@ -2,7 +2,7 @@ package ru.androidschool.intensiv.domain.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.androidschool.intensiv.domain.MovieGenre
+import ru.androidschool.intensiv.data.vo.MovieGenre
 
 interface MovieGenreRepository {
     fun getAll(): Single<List<MovieGenre>>
@@ -11,5 +11,4 @@ interface MovieGenreRepository {
     fun add(moveAndActor: MovieGenre): Completable
     fun addAll(moveAndActor: List<MovieGenre>)
     fun delete(moveAndActor: MovieGenre): Completable
-    fun delete(moveId: String, actorId: Long): Completable
 }

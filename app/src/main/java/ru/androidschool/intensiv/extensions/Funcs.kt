@@ -2,11 +2,11 @@ package ru.androidschool.intensiv.extensions
 
 import android.content.Context
 import androidx.annotation.StringRes
-import ru.androidschool.intensiv.domain.MovieLocal
+import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
-import ru.androidschool.intensiv.data.response.movies.Movie
-import ru.androidschool.intensiv.ui.feed.MainCardContainer
-import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.intensiv.data.dto.movies.Movie
+import ru.androidschool.intensiv.presentation.feed.MainCardContainer
+import ru.androidschool.intensiv.presentation.feed.MovieItem
 import ru.androidschool.utils.Constants.VOTEAVERAGE
 import java.util.Calendar
 import java.util.Locale
