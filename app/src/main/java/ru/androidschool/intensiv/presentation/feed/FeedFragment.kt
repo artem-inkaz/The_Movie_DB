@@ -90,36 +90,12 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
             viewModel.movieState.collect { movieState ->
                 val moviesLocalGroupList = movieState.moviesLocalGroupList
                 moviesLocalGroupList.forEach { movieLocal ->
-                    when (movieLocal.key) {
-                        GroupFilms.NOW_PLAYING -> {
-                            val nowPlayingMoviesList = resolveTitle(
-                                GroupFilms.NOW_PLAYING,
-                                moviesLocalGroupList[GroupFilms.NOW_PLAYING]
-                            )
-                            if (nowPlayingMoviesList != null) {
-                                moviesGroupList.add(nowPlayingMoviesList)
-                            }
-                        }
-
-                        GroupFilms.UPCOMING -> {
-                            val upComingMoviesList = resolveTitle(
-                                GroupFilms.UPCOMING,
-                                moviesLocalGroupList[GroupFilms.UPCOMING]
-                            )
-                            if (upComingMoviesList != null) {
-                                moviesGroupList.add(upComingMoviesList)
-                            }
-                        }
-
-                        GroupFilms.POPULAR -> {
-                            val popularMoviesList = resolveTitle(
-                                GroupFilms.POPULAR,
-                                moviesLocalGroupList[GroupFilms.POPULAR]
-                            )
-                            if (popularMoviesList != null) {
-                                moviesGroupList.add(popularMoviesList)
-                            }
-                        }
+                    val nowPlayingMoviesList = resolveTitle(
+                        movieLocal.key,
+                        moviesLocalGroupList[movieLocal.key]
+                    )
+                    if (nowPlayingMoviesList != null) {
+                        moviesGroupList.add(nowPlayingMoviesList)
                     }
                 }
                 binding.moviesRecyclerView.adapter = adapter.apply {
