@@ -54,8 +54,13 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         return _binding!!
     }
 
-    override fun initSearch() {
-        super.initSearch()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+        initSearch()
+    }
+
+    private fun initSearch() {
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
@@ -64,9 +69,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         }
     }
 
-    override fun initViewModel() {
-        super.initViewModel()
-        viewModel.getMovies()
+    private fun initViewModel() {
         val moviesGroupList = mutableListOf<MainCardContainer>()
         doInScopeResume {
             viewModel.movieState.collect { movieState ->
@@ -86,30 +89,30 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         doInScopeResume {
             viewModel.movieState.collect { movieState ->
                 val moviesLocalGroupList = movieState.moviesLocalGroupList
-                moviesLocalGroupList.forEachIndexed { index, movieLocal ->
-                    when(index) {
-                        0 -> {
+                moviesLocalGroupList.forEach { movieLocal ->
+                    when(movieLocal.key) {
+                        GroupFilms.NOW_PLAYING -> {
                             val nowPlayingMoviesList = getMoviesGroupList(
                                 title = R.string.now_playing,
-                                results = movieLocal,
+                                results = moviesLocalGroupList[GroupFilms.NOW_PLAYING],
                                 openMovieDetails = { openMovieDetails(it) })
                             if (nowPlayingMoviesList != null) {
                                 moviesGroupList.add(nowPlayingMoviesList)
                             }
                         }
-                        1 -> {
+                       GroupFilms.UPCOMING -> {
                             val upComingMoviesList = getMoviesGroupList(
                                 title = R.string.upcoming,
-                                results = movieLocal,
+                                results = moviesLocalGroupList[GroupFilms.UPCOMING],
                                 openMovieDetails = { openMovieDetails(it) })
                             if (upComingMoviesList != null) {
                                 moviesGroupList.add(upComingMoviesList)
                             }
                         }
-                        2 -> {
+                        GroupFilms.POPULAR -> {
                             val popularMoviesList = getMoviesGroupList(
                                 title = R.string.popular,
-                                results = movieLocal,
+                                results = moviesLocalGroupList[GroupFilms.POPULAR],
                                 openMovieDetails = { openMovieDetails(it) })
                             if (popularMoviesList != null) {
                                 moviesGroupList.add(popularMoviesList)

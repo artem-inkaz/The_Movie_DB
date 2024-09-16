@@ -26,18 +26,11 @@ abstract class BaseFragment<Binding : ViewBinding> : BaseRxFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViewModel()
-        initSearch()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    protected open fun initViewModel() {}
-    protected open fun initSearch() {}
+
     protected fun doInScopeCreated(
         state: Lifecycle.State = Lifecycle.State.CREATED,
         action: suspend () -> Unit
