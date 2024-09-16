@@ -1,6 +1,5 @@
 package ru.androidschool.intensiv.extensions
 
-import androidx.annotation.StringRes
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.presentation.feed.MainCardContainer
 import ru.androidschool.intensiv.presentation.feed.MovieItem
@@ -19,7 +18,7 @@ fun voteAverage(voteAverage: Double): Float {
 }
 
 fun getMoviesGroupList(
-    @StringRes title: Int,
+    title: String,
     results: List<MovieLocal>?,
     openMovieDetails: (MovieLocal) -> Unit
 ): MainCardContainer? {

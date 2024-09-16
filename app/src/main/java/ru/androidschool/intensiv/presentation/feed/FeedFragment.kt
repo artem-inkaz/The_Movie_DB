@@ -90,30 +90,32 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
             viewModel.movieState.collect { movieState ->
                 val moviesLocalGroupList = movieState.moviesLocalGroupList
                 moviesLocalGroupList.forEach { movieLocal ->
-                    when(movieLocal.key) {
+                    when (movieLocal.key) {
                         GroupFilms.NOW_PLAYING -> {
-                            val nowPlayingMoviesList = getMoviesGroupList(
-                                title = R.string.now_playing,
-                                results = moviesLocalGroupList[GroupFilms.NOW_PLAYING],
-                                openMovieDetails = { openMovieDetails(it) })
+                            val nowPlayingMoviesList = resolveTitle(
+                                GroupFilms.NOW_PLAYING,
+                                moviesLocalGroupList[GroupFilms.NOW_PLAYING]
+                            )
                             if (nowPlayingMoviesList != null) {
                                 moviesGroupList.add(nowPlayingMoviesList)
                             }
                         }
-                       GroupFilms.UPCOMING -> {
-                            val upComingMoviesList = getMoviesGroupList(
-                                title = R.string.upcoming,
-                                results = moviesLocalGroupList[GroupFilms.UPCOMING],
-                                openMovieDetails = { openMovieDetails(it) })
+
+                        GroupFilms.UPCOMING -> {
+                            val upComingMoviesList = resolveTitle(
+                                GroupFilms.UPCOMING,
+                                moviesLocalGroupList[GroupFilms.UPCOMING]
+                            )
                             if (upComingMoviesList != null) {
                                 moviesGroupList.add(upComingMoviesList)
                             }
                         }
+
                         GroupFilms.POPULAR -> {
-                            val popularMoviesList = getMoviesGroupList(
-                                title = R.string.popular,
-                                results = moviesLocalGroupList[GroupFilms.POPULAR],
-                                openMovieDetails = { openMovieDetails(it) })
+                            val popularMoviesList = resolveTitle(
+                                GroupFilms.POPULAR,
+                                moviesLocalGroupList[GroupFilms.POPULAR]
+                            )
                             if (popularMoviesList != null) {
                                 moviesGroupList.add(popularMoviesList)
                             }
@@ -126,6 +128,14 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
             }
         }
     }
+
+    private fun resolveTitle(title: GroupFilms, results: List<MovieLocal>?): MainCardContainer? {
+        return getMoviesGroupList(
+            title = title.title,
+            results = results,
+            openMovieDetails = { openMovieDetails(it) })
+    }
+
     private fun openMovieDetails(movie: MovieLocal) {
         val bundle = Bundle()
         bundle.putParcelable(KEY_MOVIE_ID, movie)

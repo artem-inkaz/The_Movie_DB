@@ -32,7 +32,7 @@ class FeedViewModel(
         getMovies()
     }
 
-    fun getMovies() {
+    private fun getMovies() {
         compositeDisposable.add(
             useCaseFeed.invoke()
                 .applySchedulers()
@@ -65,6 +65,7 @@ class FeedViewModel(
         )
 
     }
+
     private fun getMoviesLocalList(data: HashMap<GroupFilms, List<Movie>>) {
         data.forEach { movie ->
             when (movie.key) {
@@ -76,7 +77,7 @@ class FeedViewModel(
                         )
                     }
                     nowPlayingMoviesLocalList?.let {
-                        moviesLocalGroupList[GroupFilms.NOW_PLAYING] =  it //.add(it)
+                        moviesLocalGroupList[GroupFilms.NOW_PLAYING] = it //.add(it)
                     }
                     val nowPlayingMoviesGenre = data[GroupFilms.NOW_PLAYING]?.map { movie ->
                         movie.genre_ids.map { genre ->
