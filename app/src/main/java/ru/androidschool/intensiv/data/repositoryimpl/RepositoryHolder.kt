@@ -16,6 +16,7 @@ import ru.androidschool.intensiv.data.mappers.MovieStorageMapper
 import ru.androidschool.intensiv.data.mappers.TvShowsStorageMapper
 import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
+import ru.androidschool.intensiv.domain.usecase.FeedUseCase
 import ru.androidschool.intensiv.domain.usecase.MovieGenreUseCase
 import ru.androidschool.intensiv.domain.usecase.MovieStorageUseCase
 
@@ -37,6 +38,16 @@ object RepositoryHolder {
 
     private val repositoryUpCommingMovie by lazy { MovieUpCommingNetworkDataSource(api) }
     fun repositoryUpCommingMovie(): MovieUpCommingNetworkDataSource = repositoryUpCommingMovie
+
+    private val useCaseFeed by lazy {
+        FeedUseCase(
+            repositoryNowPlayingMovie(),
+            repositoryPopularMovie(),
+            repositoryUpCommingMovie()
+        )
+    }
+
+    fun useCaseFeed(): FeedUseCase = useCaseFeed
 
     private val repositoryMovieDetail by lazy { MovieDetailNetworkDataSource(api) }
     fun repositoryMovieDetail(): MovieDetailNetworkDataSource = repositoryMovieDetail

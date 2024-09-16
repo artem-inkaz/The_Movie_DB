@@ -1,10 +1,6 @@
 package ru.androidschool.intensiv.extensions
 
-import android.content.Context
-import androidx.annotation.StringRes
 import ru.androidschool.intensiv.data.vo.MovieLocal
-import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
-import ru.androidschool.intensiv.data.dto.movies.Movie
 import ru.androidschool.intensiv.presentation.feed.MainCardContainer
 import ru.androidschool.intensiv.presentation.feed.MovieItem
 import ru.androidschool.utils.Constants.VOTEAVERAGE
@@ -22,15 +18,14 @@ fun voteAverage(voteAverage: Double): Float {
 }
 
 fun getMoviesGroupList(
-    context: Context,
-    @StringRes title: Int,
-    results: List<Movie>?,
+    title: String,
+    results: List<MovieLocal>?,
     openMovieDetails: (MovieLocal) -> Unit
 ): MainCardContainer? {
     val moviesList =
-        results?.map {
+        results?.map { movieLocal ->
             MovieItem(
-                content = fromApiToMovieDomain(it, context.getString(title)),
+                content = movieLocal,
                 onClick = { movie ->
                     openMovieDetails(
                         movie

@@ -6,29 +6,20 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.core.base.BaseFragment
-import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
-import ru.androidschool.intensiv.data.mappers.fromApiToMovieGenreDomain
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryNowPlayingMovie
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryPopularMovie
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryUpCommingMovie
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.useCaseMovieFromStorage
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.useCaseMovieGenre
-import ru.androidschool.intensiv.data.vo.MovieGenre
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
-import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.getMoviesGroupList
 import ru.androidschool.intensiv.presentation.afterTextChanged
+import ru.androidschool.intensiv.presentation.feed.viewmodel.FeedViewModel
+import ru.androidschool.intensiv.presentation.feed.viewmodel.FeedViewModelFactory
 import timber.log.Timber
 
 class FeedFragment : BaseFragment<FeedFragmentBinding>() {
@@ -52,6 +43,8 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
         }
     }
 
+    private val viewModel: FeedViewModel by viewModels { FeedViewModelFactory() }
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -63,131 +56,60 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+        initSearch()
+    }
 
+    private fun initSearch() {
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
                 openSearch(it.toString())
             }
         }
+    }
+
+    private fun initViewModel() {
         val moviesGroupList = mutableListOf<MainCardContainer>()
-        val moviesLocalGroupList = mutableListOf<MovieLocal>()
-        val movieGenreList = mutableListOf<List<MovieGenre>>()
-
-        disposables.add(
-            Single.zip(repositoryNowPlayingMovie().getMovies(),
-                repositoryUpCommingMovie().getMovies(),
-                repositoryPopularMovie().getMovies(),
-                Function3 { nowPlayingMovies, upComingMovies, popularMovies ->
-
-                    val nowPlayingMoviesList = getMoviesGroupList(
-                        context = requireContext(),
-                        title = R.string.now_playing,
-                        results = nowPlayingMovies.results,
-                        openMovieDetails = { openMovieDetails(it) }
-                    )
-
-                    nowPlayingMoviesList?.let {
-                        val nowPlayingMoviesLocalList = nowPlayingMovies.results.map { movie ->
-                            fromApiToMovieDomain(
-                                movie,
-                                requireContext().getString(R.string.now_playing)
-                            )
-                        }
-                        moviesLocalGroupList.addAll(nowPlayingMoviesLocalList)
-                        moviesGroupList.add(it)
-
-                        val nowPlayingMoviesGenre = nowPlayingMovies.results.map { movie ->
-                            movie.genre_ids.map { genre ->
-                                fromApiToMovieGenreDomain(genre, movie.id)
-                            }
-                        }
-                        movieGenreList.addAll(nowPlayingMoviesGenre)
+        doInScopeResume {
+            viewModel.movieState.collect { movieState ->
+                when (movieState.isLoading) {
+                    true -> {
+                        binding.moviesRecyclerView.visibility = View.GONE
+                        binding.progress.visibility = View.VISIBLE
                     }
 
-                    val upComingMoviesList = getMoviesGroupList(
-                        context = requireContext(),
-                        title = R.string.upcoming,
-                        results = upComingMovies.results,
-                        openMovieDetails = { openMovieDetails(it) }
-                    )
-
-                    upComingMoviesList?.let {
-                        val upComingMoviesLocalList = upComingMovies.results.map { movie ->
-                            fromApiToMovieDomain(
-                                movie,
-                                requireContext().getString(R.string.upcoming)
-                            )
-                        }
-                        moviesLocalGroupList.addAll(upComingMoviesLocalList)
-                        moviesGroupList.add(it)
-
-                        val upComingMoviesGenre = upComingMovies.results.map { movie ->
-                            movie.genre_ids.map { genre ->
-                                fromApiToMovieGenreDomain(genre, movie.id)
-                            }
-                        }
-                        movieGenreList.addAll(upComingMoviesGenre)
-                    }
-
-                    val popularMoviesList = getMoviesGroupList(
-                        context = requireContext(),
-                        title = R.string.popular,
-                        results = popularMovies.results,
-                        openMovieDetails = { openMovieDetails(it) }
-                    )
-
-                    popularMoviesList?.let {
-                        val popularMoviesLocalList = popularMovies.results.map { movie ->
-                            fromApiToMovieDomain(
-                                movie,
-                                requireContext().getString(R.string.popular)
-                            )
-                        }
-                        moviesLocalGroupList.addAll(popularMoviesLocalList)
-                        moviesGroupList.add(it)
-
-                        val popularMoviesGenre = upComingMovies.results.map { movie ->
-                            movie.genre_ids.map { genre ->
-                                fromApiToMovieGenreDomain(genre, movie.id)
-                            }
-                        }
-                        movieGenreList.addAll(popularMoviesGenre)
-                    } == true
-
-                })
-                .applySchedulers()
-                .doOnSubscribe {
-                    binding.moviesRecyclerView.visibility = View.GONE
-                    binding.progress.visibility = View.VISIBLE
-                }
-                .doFinally {
-                    binding.progress.visibility = View.GONE
-                    binding.moviesRecyclerView.visibility = View.VISIBLE
-                    Completable.fromAction {
-                        useCaseMovieFromStorage().invoke(moviesLocalGroupList)
-                        movieGenreList.forEach { movieGenre ->
-                            useCaseMovieGenre().invoke(movieGenre)
-                        }
-                    }.applySchedulers()
-                        .subscribe()
-                }
-                .doOnError {
-                    Timber.tag(TAG).d("Error doOnError: %s", it.message)
-                }
-                .subscribe(
-                    {
-                        binding.moviesRecyclerView.adapter = adapter.apply {
-                            addAll(moviesGroupList)
-                        }
-                    },
-                    {
-                        binding.moviesRecyclerView.visibility = View.VISIBLE
+                    false -> {
                         binding.progress.visibility = View.GONE
-                        Timber.tag(TAG).d("Error subscribe : %s", it.message)
+                        binding.moviesRecyclerView.visibility = View.VISIBLE
                     }
-                )
-        )
+                }
+            }
+        }
+        doInScopeResume {
+            viewModel.movieState.collect { movieState ->
+                val moviesLocalGroupList = movieState.moviesLocalGroupList
+                moviesLocalGroupList.forEach { movieLocal ->
+                    val nowPlayingMoviesList = resolveTitle(
+                        movieLocal.key,
+                        moviesLocalGroupList[movieLocal.key]
+                    )
+                    if (nowPlayingMoviesList != null) {
+                        moviesGroupList.add(nowPlayingMoviesList)
+                    }
+                }
+                binding.moviesRecyclerView.adapter = adapter.apply {
+                    addAll(moviesGroupList)
+                }
+            }
+        }
+    }
+
+    private fun resolveTitle(title: GroupFilms, results: List<MovieLocal>?): MainCardContainer? {
+        return getMoviesGroupList(
+            title = title.title,
+            results = results,
+            openMovieDetails = { openMovieDetails(it) })
     }
 
     private fun openMovieDetails(movie: MovieLocal) {

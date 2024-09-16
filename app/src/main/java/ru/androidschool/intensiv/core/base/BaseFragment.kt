@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment<Binding : ViewBinding> : BaseRxFragment() {
 
@@ -25,5 +29,27 @@ abstract class BaseFragment<Binding : ViewBinding> : BaseRxFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    protected fun doInScopeCreated(
+        state: Lifecycle.State = Lifecycle.State.CREATED,
+        action: suspend () -> Unit
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(state) {
+                action()
+            }
+        }
+    }
+
+    protected fun doInScopeResume(
+        state: Lifecycle.State = Lifecycle.State.RESUMED,
+        action: suspend () -> Unit
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(state) {
+                action()
+            }
+        }
     }
 }

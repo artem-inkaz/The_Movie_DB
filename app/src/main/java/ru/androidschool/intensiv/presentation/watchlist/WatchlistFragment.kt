@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,14 +12,17 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.core.base.BaseFragment
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
-import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 import ru.androidschool.intensiv.data.vo.MovieLocal
-import ru.androidschool.intensiv.extensions.applySchedulers
+import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
-import timber.log.Timber
+import ru.androidschool.intensiv.presentation.profile.mvi.UserIntention
+import ru.androidschool.intensiv.presentation.profile.mvi.ViewState
+import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModel
+import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModelFactory
 
 class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
+
+    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory() }
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -46,29 +50,46 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
         binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, 4)
         binding.moviesRecyclerView.adapter = adapter.apply { addAll(listOf()) }
 
-        getFavouritesFilm()
+        viewModel.observableState.observe(viewLifecycleOwner) { state ->
+            renderState(state)
+        }
+
+        viewModel.dispatch(UserIntention.LoadMovies)
     }
 
-    private fun getFavouritesFilm() = with(binding) {
-        val movieList = RepositoryHolder.repositoryMovieFromStorage().getFavouriteMovies()
-        disposables.add(
-            movieList
-                .applySchedulers()
-                .subscribe(
-                    {
-                        val moviesList = it.map { movie ->
-                            MoviePreviewItem(
-                                movie
-                            ) { movie -> openMovieDetails(movie) }
-                        }.distinct().toList()
-                        adapter.clear()
-                        moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
-                    },
-                    {
-                        Timber.tag(TAG).d("Error doOnError: %s", it.message)
-                    }
-                )
-        )
+    private fun renderState(state: ViewState) {
+        with(state) {
+            when {
+                isLoading -> renderLoadingState()
+                isError -> renderErrorState()
+                else -> renderMovieState(items)
+            }
+        }
+    }
+
+    private fun renderLoadingState() {
+        // Show Progress Bar
+        hideAll()
+    }
+
+    private fun renderErrorState() {
+        viewModel.dispatch(UserIntention.ErrorShown)
+    }
+
+    private fun renderMovieState(items: List<MovieLocal>) = with(binding) {
+        hideAll()
+        val moviesList = items.map { movie ->
+            MoviePreviewItem(
+                movie
+            ) { movie -> openMovieDetails(movie) }
+        }.distinct().toList()
+        adapter.clear()
+        moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+        moviesRecyclerView.visibility = View.VISIBLE
+    }
+
+    private fun hideAll() = with(binding) {
+        moviesRecyclerView.visibility = View.GONE
     }
 
     private fun openMovieDetails(movie: MovieLocal) {
