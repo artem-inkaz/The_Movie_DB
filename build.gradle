@@ -63,4 +63,6 @@ ext {
     roomVersion = "2.6.1"
 
     roxyVersion = "0.5.0"
+
+    daggerVersion = "2.52"
 }

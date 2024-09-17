@@ -4,34 +4,35 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.ActorMapper
-import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
+import ru.androidschool.intensiv.data.storage.dao.ActorDao
 import ru.androidschool.intensiv.data.vo.Actor
 import ru.androidschool.intensiv.domain.datasource.ActorStorageRepository
+import javax.inject.Inject
 
-class ActorStorageRepositoryImpl(
-    private val moviesDB: MoviesDataBase,
-    private val actorMapper: ActorMapper
+class ActorStorageRepositoryImpl @Inject constructor(
+    private val dao: ActorDao,
+    private val mapper: ActorMapper
 ) : ActorStorageRepository {
 
     override fun getAll(): Observable<List<Actor>> {
-        return moviesDB.getActorDao().getAll().map { actorMapper.fromLocalDataBase(it) }
+        return dao.getAll().map { mapper.fromLocalDataBase(it) }
     }
 
     override fun add(actor: Actor): Completable {
-        return moviesDB.getActorDao().add(actorMapper.toLocalDataBase(actor))
+        return dao.add(mapper.toLocalDataBase(actor))
     }
 
     override fun addAll(actors: List<Actor>): Single<List<Actor>> =
-        moviesDB.getActorDao()
-            .insertAll(actorMapper.toLocalDataBase(actors))
+        dao
+            .insertAll(mapper.toLocalDataBase(actors))
             .andThen(getAll().firstOrError())
 
 
     override fun update(actor: Actor): Completable {
-        return moviesDB.getActorDao().update(actorMapper.toLocalDataBase(actor))
+        return dao.update(mapper.toLocalDataBase(actor))
     }
 
     override fun delete(actor: Actor): Completable {
-        return moviesDB.getActorDao().delete(actorMapper.toLocalDataBase(actor))
+        return dao.delete(mapper.toLocalDataBase(actor))
     }
 }

@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.presentation.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +10,19 @@ import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
-import ru.androidschool.intensiv.data.vo.MovieLocal
+import ru.androidschool.intensiv.data.datasource.api.search.SearchMovieDataSource
 import ru.androidschool.intensiv.data.mappers.MovieSearchResultItemMapper
+import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding
 import ru.androidschool.intensiv.extensions.applySchedulers
-import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.presentation.feed.MovieItem
 import timber.log.Timber
+import javax.inject.Inject
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
@@ -42,6 +45,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     }
     private var movieList: Set<MovieItem> = setOf()
 
+    @Inject
+    lateinit var searchMovieDataSource: SearchMovieDataSource
+
+    override fun onAttach(context: Context) {
+        requireActivity().appComponent().inject(this)
+        super.onAttach(context)
+    }
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -62,7 +73,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private fun search() = with(searchBinding) {
         disposables.add(
             searchBinding.searchToolbar.onTextChanged()
-                .switchMap { query -> MovieApiClient.apiClient.findMovies(query) }
+                .switchMap { query -> searchMovieDataSource.search(query) }
                 .applySchedulers()
                 .doOnEach {
                     binding.progress.visibility = View.GONE

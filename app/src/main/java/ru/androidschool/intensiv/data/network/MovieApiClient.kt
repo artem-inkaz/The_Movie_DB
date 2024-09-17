@@ -8,9 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.androidschool.intensiv.BuildConfig
 
 object MovieApiClient {
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(AuthMovieApiInterceptor())
-        .addInterceptor(if (BuildConfig.DEBUG) {
+
+    var interceptor =
+        if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor(CustomHttpLogging()).apply {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             }
@@ -18,7 +18,11 @@ object MovieApiClient {
             HttpLoggingInterceptor(CustomHttpLogging()).apply {
                 setLevel(HttpLoggingInterceptor.Level.NONE)
             }
-        })
+        }
+
+    private var client = OkHttpClient.Builder()
+        .addInterceptor(AuthMovieApiInterceptor())
+        .addInterceptor(interceptor)
         .build()
 
     val apiClient: MovieApiInterface by lazy {

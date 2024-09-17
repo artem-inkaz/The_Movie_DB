@@ -1,8 +1,9 @@
 package ru.androidschool.intensiv.presentation.tvshows.mvp
 
 import ru.androidschool.intensiv.domain.usecase.TvShowsUseCase
+import javax.inject.Inject
 
-class TvShowsPresenter(
+class TvShowsPresenter @Inject constructor(
     private val useCase: TvShowsUseCase
 ) : TvShowsContract.Presenter() {
     override fun makeList() {

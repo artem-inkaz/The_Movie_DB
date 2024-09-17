@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.presentation.movie_details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,27 +8,47 @@ import android.view.ViewGroup
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Completable
+import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
+import ru.androidschool.intensiv.data.datasource.api.moviedetail.MovieDetailDataSource
+import ru.androidschool.intensiv.data.dto.moveid.MovieId
 import ru.androidschool.intensiv.data.mappers.ActorMapperDto
 import ru.androidschool.intensiv.data.mappers.GenreMapperDto
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
-import ru.androidschool.intensiv.data.dto.moveid.MovieId
-import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.vo.Actor
 import ru.androidschool.intensiv.data.vo.Genre
 import ru.androidschool.intensiv.data.vo.MovieActor
 import ru.androidschool.intensiv.data.vo.MovieLocal
+import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
+import ru.androidschool.intensiv.domain.datasource.ActorStorageRepository
+import ru.androidschool.intensiv.domain.datasource.GenreStorageRepository
+import ru.androidschool.intensiv.domain.datasource.MovieStorageRepository
+import ru.androidschool.intensiv.domain.repository.MovieActorRepository
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
 import ru.androidschool.intensiv.extensions.voteAverage
-import ru.androidschool.intensiv.data.network.MovieApiClient
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder.repositoryMovieDetail
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.presentation.tvshows.TvShowsFragment
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
+
+    @Inject
+    lateinit var repositoryMovieDetail: MovieDetailDataSource
+
+    @Inject
+    lateinit var repositoryFromStorageGenre: GenreStorageRepository
+
+    @Inject
+    lateinit var repositoryMovieActor: MovieActorRepository
+
+    @Inject
+    lateinit var repositoryFromStorageActor: ActorStorageRepository
+
+    @Inject
+    lateinit var repositoryMovieFromStorage: MovieStorageRepository
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -36,6 +57,11 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     // Для загрузки из MovieList
     private var movieIdBundle by Delegates.notNull<MovieLocal>()
     private lateinit var movieDetail: MovieLocal
+
+    override fun onAttach(context: Context) {
+        requireActivity().appComponent().inject(this)
+        super.onAttach(context)
+    }
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -60,14 +86,14 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     }
 
     private fun showMovieDetail(movie: MovieLocal) = with(binding) {
-        val getMovieDetails = repositoryMovieDetail().getMovieDetails(MovieId(movie.id))
+        val getMovieDetails = repositoryMovieDetail.getMovieDetails(MovieId(movie.id))
         val genresDomainList = mutableListOf<Genre>()
         disposables.add(
             getMovieDetails
                 .applySchedulers()
                 .doFinally {
                     Completable.fromAction {
-                        RepositoryHolder.repositoryFromStorageGenre().addAll(genresDomainList)
+                        repositoryFromStorageGenre.addAll(genresDomainList)
                     }.applySchedulers()
                         .subscribe()
                 }
@@ -108,8 +134,8 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                 .applySchedulers()
                 .doFinally {
                     Completable.fromAction {
-                        RepositoryHolder.repositoryFromStorageActor().addAll(actorsDomainList)
-                        RepositoryHolder.repositoryMovieActor().addAll(movieActorsDomainList)
+                        repositoryFromStorageActor.addAll(actorsDomainList)
+                        repositoryMovieActor.addAll(movieActorsDomainList)
                     }.applySchedulers()
                         .subscribe()
                 }
@@ -155,7 +181,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
                 )
                 disposables.add(
                     Completable.fromAction {
-                        RepositoryHolder.repositoryMovieFromStorage().create(movie)
+                        repositoryMovieFromStorage.create(movie)
                     }.applySchedulers()
                         .subscribe()
                 )
@@ -164,7 +190,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     }
 
     private fun checkFavouriteMovieFromStorage(moveId: Int) {
-        val getMovieFavourite = RepositoryHolder.repositoryMovieFromStorage().getFavouriteMoviesById((moveId))
+        val getMovieFavourite = repositoryMovieFromStorage.getFavouriteMoviesById((moveId))
         disposables.add(
             getMovieFavourite
                 .applySchedulers()

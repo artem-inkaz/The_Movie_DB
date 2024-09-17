@@ -6,8 +6,10 @@ import ru.androidschool.intensiv.data.dto.movies.MoviesResponse
 import ru.androidschool.intensiv.data.dto.search.MovieSearchResponse
 import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.network.MovieApiInterface
+import javax.inject.Inject
 
-class MoviePopularNetworkDataSource(private val apiClient: MovieApiInterface) : MovieDataSource {
+class MoviePopularNetworkDataSource @Inject constructor(private val apiClient: MovieApiInterface) :
+    MovieDataSource {
     override fun getMovies(): Single<MoviesResponse> {
         return apiClient.getPopularMovies()
     }

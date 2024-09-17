@@ -2,17 +2,21 @@ package ru.androidschool.intensiv
 
 import android.app.Application
 import android.content.Context
+import ru.androidschool.intensiv.di.AppComponent
+import ru.androidschool.intensiv.di.DaggerAppComponent
 import timber.log.Timber
 
 class MovieFinderApp : Application() {
 
+    lateinit var appComponent: AppComponent
+        private set
+
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        // для БД
-        appContext = this
+        appComponent = DaggerAppComponent.factory().create(applicationContext = this)
         initDebugTools()
     }
+
     private fun initDebugTools() {
         if (BuildConfig.DEBUG) {
             initTimber()
@@ -22,12 +26,7 @@ class MovieFinderApp : Application() {
     private fun initTimber() {
         Timber.plant(Timber.DebugTree())
     }
-
-    companion object {
-        var instance: MovieFinderApp? = null
-            private set
-
-       lateinit var appContext: Context
-        fun context(): Context = appContext ?: throw IllegalStateException("context not found")
-    }
 }
+
+fun Context.appComponent(): AppComponent =
+    (this.applicationContext as MovieFinderApp).appComponent

@@ -7,11 +7,13 @@ import ru.androidschool.intensiv.data.datasource.api.movie.MoviePopularNetworkDa
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieUpCommingNetworkDataSource
 import ru.androidschool.intensiv.data.dto.movies.Movie
 import ru.androidschool.intensiv.presentation.feed.GroupFilms
+import javax.inject.Inject
+import javax.inject.Named
 
-class FeedUseCase(
-    private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
-    private val repositoryPopularMovie: MoviePopularNetworkDataSource,
-    private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
+class FeedUseCase @Inject constructor(
+    @Named("NowPlaying") private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
+    @Named("Popular") private val repositoryPopularMovie: MoviePopularNetworkDataSource,
+    @Named("UpComming") private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
 ) {
     operator fun invoke(): Single<HashMap<GroupFilms, List<Movie>>> {
         return Single.zip(

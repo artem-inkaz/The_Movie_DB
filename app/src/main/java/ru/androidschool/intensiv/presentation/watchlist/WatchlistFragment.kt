@@ -1,28 +1,35 @@
 package ru.androidschool.intensiv.presentation.watchlist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.GridLayoutManager
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FragmentWatchlistBinding
+import ru.androidschool.intensiv.di.ViewModelFactory
+import ru.androidschool.intensiv.di.withFactory
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.presentation.profile.mvi.UserIntention
 import ru.androidschool.intensiv.presentation.profile.mvi.ViewState
 import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModel
-import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModelFactory
+import javax.inject.Inject
 
 class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
 
-    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory() }
+//    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory() }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<ProfileViewModel>
+    private val viewModel: ProfileViewModel by lazy { withFactory(viewModelFactory) }
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -42,6 +49,11 @@ class WatchlistFragment : BaseFragment<FragmentWatchlistBinding>() {
             popEnter = R.anim.slide_in_left
             popExit = R.anim.slide_out_right
         }
+    }
+
+    override fun onAttach(context: Context) {
+        requireActivity().appComponent().inject(this)
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
