@@ -10,7 +10,7 @@ class AuthMovieApiInterceptor : Interceptor {
         val requestBuilder = originalRequest.newBuilder()
             .get()
             .addHeader("accept", "application/json")
-            .addHeader("Authorization", "Bearer ${BuildConfig.THE_MOVIE_DATABASE_API}")
+            .addHeader("Authorization", "Bearer ${BuildConfig.ACCESS_TOKEN_API}")
         val request = requestBuilder.build()
         return chain.proceed(request)
     }

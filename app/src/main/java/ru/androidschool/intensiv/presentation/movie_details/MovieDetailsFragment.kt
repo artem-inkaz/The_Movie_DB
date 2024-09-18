@@ -10,11 +10,11 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.Completable
 import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
+import ru.androidschool.intensiv.data.datasource.api.actor.ActorsDataSource
 import ru.androidschool.intensiv.data.datasource.api.moviedetail.MovieDetailDataSource
 import ru.androidschool.intensiv.data.dto.moveid.MovieId
 import ru.androidschool.intensiv.data.mappers.ActorMapperDto
 import ru.androidschool.intensiv.data.mappers.GenreMapperDto
-import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.vo.Actor
 import ru.androidschool.intensiv.data.vo.Genre
 import ru.androidschool.intensiv.data.vo.MovieActor
@@ -46,6 +46,9 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
 
     @Inject
     lateinit var repositoryFromStorageActor: ActorStorageRepository
+
+    @Inject
+    lateinit var actorsDataSource: ActorsDataSource
 
     @Inject
     lateinit var repositoryMovieFromStorage: MovieStorageRepository
@@ -128,7 +131,7 @@ class MovieDetailsFragment : BaseFragment<MovieDetailsFragmentBinding>() {
     private fun showActors(moveId: Int) {
         val actorsDomainList = mutableListOf<Actor>()
         val movieActorsDomainList = mutableListOf<MovieActor>()
-        val getMovieActors = MovieApiClient.apiClient.getMovieIdCredits(MovieId(moveId))
+        val getMovieActors = actorsDataSource.getActorsByMovieId(MovieId(moveId))
         disposables.add(
             getMovieActors
                 .applySchedulers()

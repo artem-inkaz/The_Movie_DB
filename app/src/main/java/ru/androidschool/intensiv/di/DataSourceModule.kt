@@ -10,7 +10,6 @@ import ru.androidschool.intensiv.data.datasource.api.moviedetail.MovieDetailNetw
 import ru.androidschool.intensiv.data.datasource.api.search.SearchMovieNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.tvshows.TvShowsNetworkDataSource
 import ru.androidschool.intensiv.data.network.MovieApiInterface
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -28,21 +27,18 @@ class DataSourceModule {
     }
 
     @Singleton
-//    @Named("NowPlaying")
     @Provides
     fun provideNowPlayingMovieDataSource(apiClient: MovieApiInterface): MovieNowPlayingNetworkDataSource {
         return MovieNowPlayingNetworkDataSource(apiClient)
     }
 
     @Singleton
-//    @Named("Popular")
     @Provides
     fun providePopularMovieDataSource(apiClient: MovieApiInterface): MoviePopularNetworkDataSource {
         return MoviePopularNetworkDataSource(apiClient)
     }
 
     @Singleton
-//    @Named("UpComming")
     @Provides
     fun provideUpCommingMovieDataSource(apiClient: MovieApiInterface): MovieUpCommingNetworkDataSource {
         return MovieUpCommingNetworkDataSource(apiClient)

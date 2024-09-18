@@ -34,7 +34,7 @@ class FeedViewModel @Inject constructor(
         getMovies()
     }
 
-    private fun getMovies() {
+    fun getMovies() {
         compositeDisposable.add(
             useCaseFeed.invoke()
                 .applySchedulers()

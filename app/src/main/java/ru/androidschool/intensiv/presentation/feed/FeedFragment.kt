@@ -80,6 +80,7 @@ class FeedFragment : BaseFragment<FeedFragmentBinding>() {
     }
 
     private fun initViewModel() {
+        viewModel.getMovies()
         val moviesGroupList = mutableListOf<MainCardContainer>()
         doInScopeResume {
             viewModel.movieState.collect { movieState ->

@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.dto.movies.MoviesResponse
 import ru.androidschool.intensiv.data.dto.search.MovieSearchResponse
-import ru.androidschool.intensiv.data.network.MovieApiClient
 import ru.androidschool.intensiv.data.network.MovieApiInterface
 import javax.inject.Inject
 
@@ -15,6 +14,6 @@ class MovieUpCommingNetworkDataSource @Inject constructor(private val apiClient:
     }
 
     override fun search(query: String): Observable<MovieSearchResponse> {
-        return MovieApiClient.apiClient.findMovies(query)
+        return apiClient.findMovies(query)
     }
 }

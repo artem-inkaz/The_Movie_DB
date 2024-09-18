@@ -9,7 +9,6 @@ import ru.androidschool.intensiv.presentation.feed.viewmodel.FeedViewModel
 import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModel
 import kotlin.reflect.KClass
 
-//
 @Target(
     AnnotationTarget.FUNCTION,
     AnnotationTarget.PROPERTY_GETTER,
@@ -19,20 +18,8 @@ import kotlin.reflect.KClass
 @MapKey
 internal annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
-//@Singleton
-//class ViewModelFactory @Inject constructor(
-//    private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>) :
-//    ViewModelProvider.Factory {
-//
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-//        viewModels[modelClass]?.get() as T
-//}
-
 @Module
 abstract class ViewModelModule {
-
-//    @Binds
-//    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 
     @Binds
     @IntoMap

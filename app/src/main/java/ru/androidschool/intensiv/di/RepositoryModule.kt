@@ -30,7 +30,6 @@ import ru.androidschool.intensiv.domain.repository.MovieActorRepository
 import ru.androidschool.intensiv.domain.repository.MovieGenreRepository
 import ru.androidschool.intensiv.domain.repository.MovieRepository
 import ru.androidschool.intensiv.domain.repository.TvShowsRepository
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -67,21 +66,18 @@ interface RepositoryModule {
     ): ActorsDataSource
 
     @Singleton
-//    @Named("NowPlaying")
     @Binds
     fun bindsNowPlayingMovieDataSource(
         dataSource: MovieNowPlayingNetworkDataSource
     ): MovieDataSource
 
     @Singleton
-//    @Named("Popular")
     @Binds
     fun bindsPopularMovieDataSource(
         dataSource: MoviePopularNetworkDataSource
     ): MovieDataSource
 
     @Singleton
-//    @Named("UpComming")
     @Binds
     fun bindsUpCommingMovieDataSource(
         dataSource: MovieUpCommingNetworkDataSource
