@@ -2,6 +2,7 @@ package ru.androidschool.intensiv.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import ru.androidschool.intensiv.data.mappers.ActorMapper
 import ru.androidschool.intensiv.data.mappers.ActorMapperDto
 import ru.androidschool.intensiv.data.mappers.GenreMapper
@@ -11,43 +12,42 @@ import ru.androidschool.intensiv.data.mappers.MovieAndGenreMapper
 import ru.androidschool.intensiv.data.mappers.MovieSearchResultItemMapper
 import ru.androidschool.intensiv.data.mappers.MovieStorageMapper
 import ru.androidschool.intensiv.data.mappers.TvShowsStorageMapper
-import javax.inject.Singleton
 
 @Module
 class MapperModule {
     @Provides
-    @Singleton
+    @Reusable
     fun provideActorMapper() = ActorMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideActorMapperDto() = ActorMapperDto()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideGenreMapper() = GenreMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideGenreMapperDto() = GenreMapperDto()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMovieAndActorMapper() = MovieAndActorMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMovieAndGenreMapper() = MovieAndGenreMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMovieStorageMapper() = MovieStorageMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMovieSearchResultItemMapper() = MovieSearchResultItemMapper()
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMovieTvShowsStorageMapper() = TvShowsStorageMapper()
 }

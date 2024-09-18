@@ -47,7 +47,6 @@ abstract class MoviesDataBase : RoomDatabase() {
                     context.applicationContext,
                     MoviesDataBase::class.java, DATABASE_NAME
                 ).apply {
-                    allowMainThreadQueries()
                     if (BuildConfig.DEBUG) {
                         fallbackToDestructiveMigration()
                     }
