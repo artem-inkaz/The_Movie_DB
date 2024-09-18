@@ -67,21 +67,21 @@ interface RepositoryModule {
     ): ActorsDataSource
 
     @Singleton
-    @Named("NowPlaying")
+//    @Named("NowPlaying")
     @Binds
     fun bindsNowPlayingMovieDataSource(
         dataSource: MovieNowPlayingNetworkDataSource
     ): MovieDataSource
 
     @Singleton
-    @Named("Popular")
+//    @Named("Popular")
     @Binds
     fun bindsPopularMovieDataSource(
         dataSource: MoviePopularNetworkDataSource
     ): MovieDataSource
 
     @Singleton
-    @Named("UpComming")
+//    @Named("UpComming")
     @Binds
     fun bindsUpCommingMovieDataSource(
         dataSource: MovieUpCommingNetworkDataSource

@@ -28,21 +28,21 @@ class DataSourceModule {
     }
 
     @Singleton
-    @Named("NowPlaying")
+//    @Named("NowPlaying")
     @Provides
     fun provideNowPlayingMovieDataSource(apiClient: MovieApiInterface): MovieNowPlayingNetworkDataSource {
         return MovieNowPlayingNetworkDataSource(apiClient)
     }
 
     @Singleton
-    @Named("Popular")
+//    @Named("Popular")
     @Provides
     fun providePopularMovieDataSource(apiClient: MovieApiInterface): MoviePopularNetworkDataSource {
         return MoviePopularNetworkDataSource(apiClient)
     }
 
     @Singleton
-    @Named("UpComming")
+//    @Named("UpComming")
     @Provides
     fun provideUpCommingMovieDataSource(apiClient: MovieApiInterface): MovieUpCommingNetworkDataSource {
         return MovieUpCommingNetworkDataSource(apiClient)

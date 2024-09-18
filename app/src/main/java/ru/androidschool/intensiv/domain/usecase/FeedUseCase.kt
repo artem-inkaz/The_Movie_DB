@@ -11,9 +11,9 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class FeedUseCase @Inject constructor(
-    @Named("NowPlaying") private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
-    @Named("Popular") private val repositoryPopularMovie: MoviePopularNetworkDataSource,
-    @Named("UpComming") private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
+   /* @Named("NowPlaying") */private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
+   /* @Named("Popular")*/ private val repositoryPopularMovie: MoviePopularNetworkDataSource,
+   /* @Named("UpComming")*/ private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
 ) {
     operator fun invoke(): Single<HashMap<GroupFilms, List<Movie>>> {
         return Single.zip(
