@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.presentation.tvshows
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +10,19 @@ import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
-import ru.androidschool.intensiv.data.repositoryimpl.RepositoryHolder
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
-import ru.androidschool.intensiv.domain.usecase.TvShowsUseCase
 import ru.androidschool.intensiv.presentation.tvshows.mvp.TvShowsContract
 import ru.androidschool.intensiv.presentation.tvshows.mvp.TvShowsPresenter
 import timber.log.Timber
+import javax.inject.Inject
 
 class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>(), TvShowsContract.View {
 
-    // Инициализируем
-    private val presenter: TvShowsPresenter by lazy {
-        TvShowsPresenter(TvShowsUseCase(RepositoryHolder.repositoryTvShows()))
-    }
+    @Inject
+    lateinit var presenter: TvShowsPresenter
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -38,6 +37,11 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>(), TvShowsContract.
         }
     }
 
+    override fun onAttach(context: Context) {
+        requireActivity().appComponent().inject(this)
+        super.onAttach(context)
+    }
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -47,7 +51,6 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>(), TvShowsContract.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Добавляем в presenter имплементацию FeedView
         presenter.attach(this)
         // Вызываем метод presenter для получения фильмов

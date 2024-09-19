@@ -6,8 +6,9 @@ import ru.androidschool.intensiv.data.mappers.TvShowsMapperDto
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
 import ru.androidschool.intensiv.domain.datasource.TvShowsStorageRepository
 import ru.androidschool.intensiv.domain.repository.TvShowsRepository
+import javax.inject.Inject
 
-class TvShowsRepositoryImpl(
+class TvShowsRepositoryImpl @Inject constructor(
     private val api: TvShowsDataSource,
     private val storage: TvShowsStorageRepository
 ) : TvShowsRepository {

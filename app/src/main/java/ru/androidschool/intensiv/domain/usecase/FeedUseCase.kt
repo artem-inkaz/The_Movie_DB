@@ -6,12 +6,14 @@ import ru.androidschool.intensiv.data.datasource.api.movie.MovieNowPlayingNetwor
 import ru.androidschool.intensiv.data.datasource.api.movie.MoviePopularNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieUpCommingNetworkDataSource
 import ru.androidschool.intensiv.data.dto.movies.Movie
+import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.presentation.feed.GroupFilms
+import javax.inject.Inject
 
-class FeedUseCase(
-    private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
-    private val repositoryPopularMovie: MoviePopularNetworkDataSource,
-    private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
+class FeedUseCase @Inject constructor(
+   private val repositoryNowPlayingMovie: MovieNowPlayingNetworkDataSource,
+   private val repositoryPopularMovie: MoviePopularNetworkDataSource,
+   private val repositoryUpCommingMovie: MovieUpCommingNetworkDataSource
 ) {
     operator fun invoke(): Single<HashMap<GroupFilms, List<Movie>>> {
         return Single.zip(
@@ -25,6 +27,6 @@ class FeedUseCase(
                     GroupFilms.POPULAR to popularMovies.results
                 )
             }
-        )
+        ).applySchedulers()
     }
 }

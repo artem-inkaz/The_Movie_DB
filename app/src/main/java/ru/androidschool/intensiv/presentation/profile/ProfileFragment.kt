@@ -1,28 +1,34 @@
 package ru.androidschool.intensiv.presentation.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
+import ru.androidschool.intensiv.di.ViewModelFactory
+import ru.androidschool.intensiv.di.withFactory
 import ru.androidschool.intensiv.presentation.profile.mvi.UserIntention
 import ru.androidschool.intensiv.presentation.profile.mvi.ViewState
 import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModel
-import ru.androidschool.intensiv.presentation.profile.viewmodel.ProfileViewModelFactory
+import javax.inject.Inject
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
-    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory() }
+    //    private val viewModel: ProfileViewModel by viewModels { ProfileViewModelFactory() }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<ProfileViewModel>
+    private val viewModel: ProfileViewModel by lazy { withFactory(viewModelFactory) }
 
     private lateinit var profileTabLayoutTitles: Array<String>
 
@@ -45,6 +51,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 countFavourite = 0
             }
         }
+    }
+
+    override fun onAttach(context: Context) {
+        requireActivity().appComponent().inject(this)
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

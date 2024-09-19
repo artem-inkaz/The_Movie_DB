@@ -125,4 +125,8 @@ dependencies {
     //MVI Roxy
     implementation "com.ww:roxie:$rootProject.roxyVersion"
 
+    //Dagger2
+    implementation("com.google.dagger:dagger:$rootProject.daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$rootProject.daggerVersion")
+
 }

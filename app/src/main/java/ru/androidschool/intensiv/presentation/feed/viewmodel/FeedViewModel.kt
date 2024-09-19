@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.presentation.feed.viewmodel
 
+import android.util.Log
 import io.reactivex.Completable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,9 @@ import ru.androidschool.intensiv.domain.usecase.MovieStorageUseCase
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.presentation.feed.GroupFilms
 import timber.log.Timber
+import javax.inject.Inject
 
-class FeedViewModel(
+class FeedViewModel @Inject constructor(
     private val useCaseFeed: FeedUseCase,
     private val useCaseMovieGenre: MovieGenreUseCase,
     private val useCaseMovieFromStorage: MovieStorageUseCase
@@ -32,7 +34,7 @@ class FeedViewModel(
         getMovies()
     }
 
-    private fun getMovies() {
+    fun getMovies() {
         compositeDisposable.add(
             useCaseFeed.invoke()
                 .applySchedulers()
@@ -103,7 +105,6 @@ class FeedViewModel(
                         }
                     }
                     upComingMoviesGenre?.let { movieGenreList.addAll(it) }
-
                 }
 
                 GroupFilms.POPULAR -> {
@@ -136,6 +137,7 @@ class FeedViewModel(
                 useCaseMovieGenre.invoke(movieGenre)
             }
         }.applySchedulers()
+            .doOnError { Log.d(TAG, "saveToStorage: $it") }
             .subscribe()
     }
 

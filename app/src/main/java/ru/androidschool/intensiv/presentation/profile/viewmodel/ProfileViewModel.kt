@@ -9,8 +9,9 @@ import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.presentation.profile.mvi.UserIntention
 import ru.androidschool.intensiv.presentation.profile.mvi.UserIntentionResult
 import ru.androidschool.intensiv.presentation.profile.mvi.ViewState
+import javax.inject.Inject
 
-class ProfileViewModel(
+class ProfileViewModel @Inject constructor(
     private val repository: MovieStorageRepository
 ) : BaseViewModel<UserIntention, ViewState>() {
 

@@ -1,11 +1,11 @@
 package ru.androidschool.intensiv.data.storage.database
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.androidschool.intensiv.BuildConfig
-import ru.androidschool.intensiv.MovieFinderApp
 import ru.androidschool.intensiv.data.storage.converters.GenreConverters
 import ru.androidschool.intensiv.data.storage.dao.ActorDao
 import ru.androidschool.intensiv.data.storage.dao.GenreDao
@@ -38,17 +38,22 @@ abstract class MoviesDataBase : RoomDatabase() {
     abstract fun getTvShowsDao(): TvShowsDao
 
     companion object {
-        val instance: MoviesDataBase by lazy {
-            Room.databaseBuilder(
-                MovieFinderApp.context(),
-                MoviesDataBase::class.java,
-                DATABASE_NAME
-            ).apply {
-                if (BuildConfig.DEBUG) {
-                    fallbackToDestructiveMigration()
+        private var instance: MoviesDataBase? = null
+
+        @Synchronized
+        fun get(context: Context): MoviesDataBase {
+            if (instance == null) {
+                instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    MoviesDataBase::class.java, DATABASE_NAME
+                ).apply {
+                    if (BuildConfig.DEBUG) {
+                        fallbackToDestructiveMigration()
+                    }
                 }
+                    .build()
             }
-                .build()
+            return instance!!
         }
     }
 }
