@@ -1,6 +1,6 @@
 package ru.androidschool.intensiv.data.mappers
 
-import ru.androidschool.intensiv.data.dto.movies.Movie
+import ru.androidschool.intensiv.core.network.dto.movies.Movie
 import ru.androidschool.intensiv.data.storage.entities.MovieEntity
 import ru.androidschool.intensiv.data.vo.MovieGenre
 import ru.androidschool.intensiv.data.vo.MovieLocal

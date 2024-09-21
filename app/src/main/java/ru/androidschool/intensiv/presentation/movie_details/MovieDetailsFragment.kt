@@ -12,7 +12,8 @@ import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
 import ru.androidschool.intensiv.data.datasource.api.actor.ActorsDataSource
 import ru.androidschool.intensiv.data.datasource.api.moviedetail.MovieDetailDataSource
-import ru.androidschool.intensiv.data.dto.moveid.MovieId
+import ru.androidschool.intensiv.core.network.dto.moveid.MovieId
+import ru.androidschool.intensiv.core.network.utils.voteAverage
 import ru.androidschool.intensiv.data.mappers.ActorMapperDto
 import ru.androidschool.intensiv.data.mappers.GenreMapperDto
 import ru.androidschool.intensiv.data.vo.Actor
@@ -26,7 +27,7 @@ import ru.androidschool.intensiv.domain.datasource.MovieStorageRepository
 import ru.androidschool.intensiv.domain.repository.MovieActorRepository
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.extensions.loadImageByUrl
-import ru.androidschool.intensiv.extensions.voteAverage
+
 import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_MOVIE_ID
 import ru.androidschool.intensiv.presentation.tvshows.TvShowsFragment
 import timber.log.Timber

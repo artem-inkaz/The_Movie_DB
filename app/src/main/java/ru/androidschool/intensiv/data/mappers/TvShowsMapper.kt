@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.core.base.MapperDomain
-import ru.androidschool.intensiv.data.dto.tvseries.TvShows as InTvShows
+import ru.androidschool.intensiv.core.network.dto.tvseries.TvShows as InTvShows
 import ru.androidschool.intensiv.data.storage.entities.TvShowsEntity as InStorageTvShows
 import ru.androidschool.intensiv.data.vo.TvShowsLocal as OutTvShows
 

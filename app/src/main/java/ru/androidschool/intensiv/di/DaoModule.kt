@@ -7,27 +7,27 @@ import javax.inject.Singleton
 
 @Module
 class DaoModule {
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideActorDao(database: MoviesDataBase) = database.getActorDao()
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideGenreDao(database: MoviesDataBase) = database.getGenreDao()
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieActorDao(database: MoviesDataBase) = database.getMovieActorDao()
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieDao(database: MoviesDataBase) = database.getMovieDao()
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieGenreDao(database: MoviesDataBase) = database.getMovieGenreDao()
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideTvShowsDao(database: MoviesDataBase) = database.getTvShowsDao()
 }

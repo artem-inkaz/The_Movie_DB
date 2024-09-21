@@ -1,9 +1,10 @@
 package ru.androidschool.intensiv.data.datasource.api.actor
 
 import io.reactivex.Single
-import ru.androidschool.intensiv.data.dto.moveid.MovieId
-import ru.androidschool.intensiv.data.dto.moveidcredits.MoveIdCreditsResponse
-import ru.androidschool.intensiv.data.network.MovieApiInterface
+import ru.androidschool.intensiv.core.network.MovieApiInterface
+import ru.androidschool.intensiv.core.network.dto.moveid.MovieId
+import ru.androidschool.intensiv.core.network.dto.moveidcredits.MoveIdCreditsResponse
+
 import javax.inject.Inject
 
 class ActorsNetworkDataSource @Inject constructor(private val apiClient: MovieApiInterface) :

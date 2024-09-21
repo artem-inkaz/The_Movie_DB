@@ -2,6 +2,7 @@ package ru.androidschool.intensiv
 
 import android.app.Application
 import android.content.Context
+import ru.androidschool.intensiv.core.network.di.DaggerNetworkComponent
 import ru.androidschool.intensiv.di.AppComponent
 import ru.androidschool.intensiv.di.DaggerAppComponent
 import timber.log.Timber
@@ -13,7 +14,8 @@ class MovieFinderApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.factory().create(applicationContext = this)
+        val networkComponent = DaggerNetworkComponent.create()
+        appComponent = DaggerAppComponent.factory().create(networkComponent, applicationContext = this)
         initDebugTools()
     }
 

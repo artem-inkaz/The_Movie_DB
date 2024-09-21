@@ -10,7 +10,7 @@ import javax.inject.Singleton
 class PresenterModule {
 
     @Provides
-    @Singleton
+    @ApplicationScope
     fun provideTvShowsPresenter(useCase: TvShowsUseCase): TvShowsPresenter =
         TvShowsPresenter(useCase)
 }

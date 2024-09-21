@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.data.dto.search
 
 import kotlinx.serialization.Serializable
+import ru.androidschool.intensiv.core.network.dto.search.MovieSearchResultItem
 
 @Serializable
 data class MovieSearchResponse(

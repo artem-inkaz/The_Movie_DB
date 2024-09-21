@@ -1,8 +1,7 @@
-package ru.androidschool.intensiv.data.network
+package ru.androidschool.intensiv.core.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.androidschool.intensiv.BuildConfig
 
 class AuthMovieApiInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

@@ -1,8 +1,9 @@
 package ru.androidschool.intensiv.data.datasource.api.search
 
 import io.reactivex.Observable
-import ru.androidschool.intensiv.data.dto.search.MovieSearchResponse
-import ru.androidschool.intensiv.data.network.MovieApiInterface
+import ru.androidschool.intensiv.core.network.MovieApiInterface
+import ru.androidschool.intensiv.core.network.dto.search.MovieSearchResponse
+
 import javax.inject.Inject
 
 class SearchMovieNetworkDataSource @Inject constructor(private val apiClient: MovieApiInterface) :

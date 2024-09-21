@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.core.base.MapperDomain
-import ru.androidschool.intensiv.data.dto.moveid.Genre as InGenre
+import ru.androidschool.intensiv.core.network.dto.moveid.Genre as InGenre
 import ru.androidschool.intensiv.data.vo.Genre as OutGenre
 import ru.androidschool.intensiv.data.storage.entities.GenreEntity as InGenreStorage
 

@@ -3,10 +3,11 @@ package ru.androidschool.intensiv.presentation.tvshows
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.core.network.utils.voteAverage
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
 import ru.androidschool.intensiv.databinding.ItemTvShowsDestBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
-import ru.androidschool.intensiv.extensions.voteAverage
+
 
 class TvShowDestItem(
     private val content: TvShowsLocal,

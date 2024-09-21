@@ -3,6 +3,11 @@ package ru.androidschool.intensiv.data.dto.moveid
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 import ru.androidschool.intensiv.BuildConfig
+import ru.androidschool.intensiv.core.network.dto.moveid.BelongsToCollection
+import ru.androidschool.intensiv.core.network.dto.moveid.Genre
+import ru.androidschool.intensiv.core.network.dto.moveid.ProductionCompany
+import ru.androidschool.intensiv.core.network.dto.moveid.ProductionCountry
+import ru.androidschool.intensiv.core.network.dto.moveid.SpokenLanguage
 
 @Serializable
 data class MoveIdResponse(

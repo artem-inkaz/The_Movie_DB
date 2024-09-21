@@ -35,91 +35,91 @@ import javax.inject.Singleton
 @Module
 interface RepositoryModule {
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsMovieActorRepository(
         repository: MovieActorRepositoryImpl
     ): MovieActorRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsMovieGenreRepository(
         repository: MovieGenreRepositoryImpl
     ): MovieGenreRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsMovieRepository(
         repository: MovieRepositoryImpl
     ): MovieRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsTvShowsRepository(
         repository: TvShowsRepositoryImpl
     ): TvShowsRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsActorsDataSource(
         dataSource: ActorsNetworkDataSource
     ): ActorsDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsNowPlayingMovieDataSource(
         dataSource: MovieNowPlayingNetworkDataSource
     ): MovieDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsPopularMovieDataSource(
         dataSource: MoviePopularNetworkDataSource
     ): MovieDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsUpCommingMovieDataSource(
         dataSource: MovieUpCommingNetworkDataSource
     ): MovieDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsActorStorageRepository(
         repository: ActorStorageRepositoryImpl
     ): ActorStorageRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsGenreStorageRepository(
         repository: GenreStorageRepositoryImpl
     ): GenreStorageRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsMovieStorageRepository(
         repository: MovieStorageRepositoryImpl
     ): MovieStorageRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsTvShowsStorageRepository(
         repository: TvShowsStorageRepositoryImpl
     ): TvShowsStorageRepository
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsTvShowsDataSource(
         dataSource: TvShowsNetworkDataSource
     ): TvShowsDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsMovieDetailDataSource(
         dataSource: MovieDetailNetworkDataSource
     ): MovieDetailDataSource
 
-    @Singleton
+    @ApplicationScope
     @Binds
     fun bindsSearchMovieDataSource(
         dataSource: SearchMovieNetworkDataSource

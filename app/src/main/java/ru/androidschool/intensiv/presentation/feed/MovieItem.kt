@@ -3,10 +3,11 @@ package ru.androidschool.intensiv.presentation.feed
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.core.network.utils.voteAverage
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
 import ru.androidschool.intensiv.extensions.loadImageByUrl
-import ru.androidschool.intensiv.extensions.voteAverage
+
 
 class MovieItem(
     private val content: MovieLocal,

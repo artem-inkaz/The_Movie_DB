@@ -1,44 +1,43 @@
-package ru.androidschool.intensiv.data.network
+package ru.androidschool.intensiv.core.network
 
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.androidschool.intensiv.data.dto.moveid.MoveIdResponse
-import ru.androidschool.intensiv.data.dto.moveid.MovieId
-import ru.androidschool.intensiv.data.dto.moveidcredits.MoveIdCreditsResponse
-import ru.androidschool.intensiv.data.dto.movies.MoviesResponse
-import ru.androidschool.intensiv.data.dto.search.MovieSearchResponse
-import ru.androidschool.intensiv.data.dto.tvseries.TvShowsResponse
-import ru.androidschool.intensiv.extensions.currentYear
-import ru.androidschool.intensiv.extensions.getLanguage
-import ru.androidschool.utils.Constants.PAGE
-import ru.androidschool.utils.Constants.REGION
+import ru.androidschool.intensiv.core.network.dto.moveid.MoveIdResponse
+import ru.androidschool.intensiv.core.network.dto.moveid.MovieId
+import ru.androidschool.intensiv.core.network.dto.moveidcredits.MoveIdCreditsResponse
+import ru.androidschool.intensiv.core.network.dto.movies.MoviesResponse
+import ru.androidschool.intensiv.core.network.dto.search.MovieSearchResponse
+import ru.androidschool.intensiv.core.network.dto.tvseries.TvShowsResponse
+import ru.androidschool.intensiv.core.network.utils.currentYear
+import ru.androidschool.intensiv.core.network.utils.getLanguage
+import ru.androidschool.intensiv.core.network.utils.movieParams
 
 interface MovieApiInterface {
     @GET("movie/now_playing")
     fun getNowPlayingMovies(
         @Query("language") language: String = getLanguage(),
-        @Query("page") page: Int = PAGE,
+        @Query("page") page: Int = movieParams.page,
     ): Single<MoviesResponse>
 
     @GET("movie/upcoming")
     fun getUpComingMovies(
         @Query("language") language: String = getLanguage(),
-        @Query("page") page: Int = PAGE,
+        @Query("page") page: Int = movieParams.page,
     ): Single<MoviesResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
         @Query("language") language: String = getLanguage(),
-        @Query("page") page: Int = PAGE,
+        @Query("page") page: Int = movieParams.page,
     ): Single<MoviesResponse>
 
     @GET("tv/popular")
     fun getPopularTvShows(
         @Query("language") language: String = getLanguage(),
-        @Query("page") page: Int = PAGE,
+        @Query("page") page: Int = movieParams.page,
     ): Single<TvShowsResponse>
 
     @GET("movie/{movie_id}")
@@ -62,8 +61,8 @@ interface MovieApiInterface {
         @Query("query") query: String,
         @Query("language") language: String = getLanguage(),
         @Query("include_adult") adult: Boolean = false,
-        @Query("region") region: String = REGION,
-        @Query("page") page: Int = PAGE,
+        @Query("region") region: String = movieParams.region,
+        @Query("page") page: Int = movieParams.page,
         @Query("year") year: String = "$currentYear",
     ): Observable<MovieSearchResponse>
 }

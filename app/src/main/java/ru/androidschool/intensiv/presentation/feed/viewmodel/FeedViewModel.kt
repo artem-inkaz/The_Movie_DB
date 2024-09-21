@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.androidschool.intensiv.core.base.BaseViewModel
-import ru.androidschool.intensiv.data.dto.movies.Movie
+import ru.androidschool.intensiv.core.network.dto.movies.Movie
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieDomain
 import ru.androidschool.intensiv.data.mappers.fromApiToMovieGenreDomain
 import ru.androidschool.intensiv.data.vo.MovieGenre

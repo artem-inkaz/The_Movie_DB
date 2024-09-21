@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.core.base.MapperDomain
-import ru.androidschool.intensiv.data.dto.moveidcredits.Cast as InActor
+import ru.androidschool.intensiv.core.network.dto.moveidcredits.Cast as InActor
 import ru.androidschool.intensiv.data.storage.entities.ActorEntity as InActorStorage
 import ru.androidschool.intensiv.data.vo.Actor as OutActor
 

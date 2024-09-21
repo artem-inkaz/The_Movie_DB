@@ -3,7 +3,7 @@ package ru.androidschool.intensiv.data.storage.converters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.androidschool.intensiv.data.dto.moveid.Genre
+import ru.androidschool.intensiv.core.network.dto.moveid.Genre
 
 class GenreConverters {
 

@@ -1,6 +1,8 @@
 package ru.androidschool.intensiv.data.dto.movies
 
 import kotlinx.serialization.Serializable
+import ru.androidschool.intensiv.core.network.dto.movies.Dates
+import ru.androidschool.intensiv.core.network.dto.movies.Movie
 
 @Serializable
 data class MoviesResponse(
