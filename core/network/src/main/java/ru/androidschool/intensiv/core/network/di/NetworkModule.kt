@@ -11,9 +11,7 @@ import ru.androidschool.intensiv.core.network.AuthMovieApiInterceptor
 import ru.androidschool.intensiv.core.network.BuildConfig
 import ru.androidschool.intensiv.core.network.CustomHttpLogging
 import ru.androidschool.intensiv.core.network.MovieApiInterface
-import ru.androidschool.intensiv.core.network.di.NetworkScope
 import ru.androidschool.intensiv.core.network.utils.movieParams
-import javax.inject.Singleton
 
 @Module
 class NetworkModule {

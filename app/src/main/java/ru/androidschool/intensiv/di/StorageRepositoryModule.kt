@@ -17,14 +17,13 @@ import ru.androidschool.intensiv.data.repositoryimpl.MovieActorRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.MovieGenreRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.MovieRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.TvShowsRepositoryImpl
-import ru.androidschool.intensiv.data.storage.dao.ActorDao
-import ru.androidschool.intensiv.data.storage.dao.GenreDao
-import ru.androidschool.intensiv.data.storage.dao.MovieActorDao
-import ru.androidschool.intensiv.data.storage.dao.MovieDao
-import ru.androidschool.intensiv.data.storage.dao.MovieGenreDao
-import ru.androidschool.intensiv.data.storage.dao.TvShowsDao
+import ru.androidschool.intensiv.core.storage.dao.ActorDao
+import ru.androidschool.intensiv.core.storage.dao.GenreDao
+import ru.androidschool.intensiv.core.storage.dao.MovieActorDao
+import ru.androidschool.intensiv.core.storage.dao.MovieDao
+import ru.androidschool.intensiv.core.storage.dao.MovieGenreDao
+import ru.androidschool.intensiv.core.storage.dao.TvShowsDao
 import ru.androidschool.intensiv.domain.datasource.TvShowsStorageRepository
-import javax.inject.Singleton
 
 @Module
 class StorageRepositoryModule {

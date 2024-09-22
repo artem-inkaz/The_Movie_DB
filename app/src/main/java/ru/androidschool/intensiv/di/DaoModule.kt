@@ -2,8 +2,8 @@ package ru.androidschool.intensiv.di
 
 import dagger.Module
 import dagger.Provides
-import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
-import javax.inject.Singleton
+import ru.androidschool.intensiv.core.storage.database.MoviesDataBase
+
 
 @Module
 class DaoModule {

@@ -3,7 +3,7 @@ package ru.androidschool.intensiv.data.repositoryimpl
 import io.reactivex.Completable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.MovieAndActorMapper
-import ru.androidschool.intensiv.data.storage.dao.MovieActorDao
+import ru.androidschool.intensiv.core.storage.dao.MovieActorDao
 import ru.androidschool.intensiv.data.vo.MovieActor
 import ru.androidschool.intensiv.domain.repository.MovieActorRepository
 import javax.inject.Inject

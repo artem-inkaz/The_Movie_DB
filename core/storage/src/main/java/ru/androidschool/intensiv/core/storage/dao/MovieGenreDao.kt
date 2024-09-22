@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.data.storage.dao
+package ru.androidschool.intensiv.core.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,9 +8,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.androidschool.intensiv.data.storage.entities.GenreEntity
-import ru.androidschool.intensiv.data.storage.entities.GenreWithMovie
-import ru.androidschool.intensiv.data.storage.entities.MovieGenreEntity
+import ru.androidschool.intensiv.core.storage.entities.GenreEntity
+import ru.androidschool.intensiv.core.storage.entities.GenreWithMovie
+import ru.androidschool.intensiv.core.storage.entities.MovieGenreEntity
 
 @Dao
 interface MovieGenreDao {

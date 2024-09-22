@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-kapt")
 }
 
 android {
@@ -13,12 +14,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -30,6 +33,24 @@ android {
 }
 
 dependencies {
+
+    //RxJava
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.adapterRxjava2"
+
+    //Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation "androidx.room:room-testing:$rootProject.roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-rxjava2:$rootProject.roomVersion"
+    testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+
+    //Dagger2
+    implementation("com.google.dagger:dagger:$rootProject.daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$rootProject.daggerVersion")
 
     implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.7.0'

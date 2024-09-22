@@ -1,14 +1,14 @@
-package ru.androidschool.intensiv.di
+package ru.androidschool.intensiv.core.storage.di
 
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.androidschool.intensiv.data.storage.database.MoviesDataBase
+import ru.androidschool.intensiv.core.storage.database.MoviesDataBase
 
 @Module
-class AppModule {
+object StorageModule {
 
-    @ApplicationScope
+    @StorageScope
     @Provides
     fun provideDb(app: Context): MoviesDataBase {
         return MoviesDataBase.get(app)

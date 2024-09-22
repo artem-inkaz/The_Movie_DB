@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.data.storage.dao
+package ru.androidschool.intensiv.core.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.Single
-import ru.androidschool.intensiv.data.storage.entities.MovieEntity
+import ru.androidschool.intensiv.core.storage.entities.MovieEntity
 
 @Dao
 interface MovieDao {
@@ -16,7 +16,6 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun create(movie: MovieEntity)
 
-//    @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(movie: List<MovieEntity>)
 

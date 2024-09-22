@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.data.storage.dao
+package ru.androidschool.intensiv.core.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.androidschool.intensiv.data.storage.entities.MovieActorEntity
+import ru.androidschool.intensiv.core.storage.entities.MovieActorEntity
 
 @Dao
 interface MovieActorDao {

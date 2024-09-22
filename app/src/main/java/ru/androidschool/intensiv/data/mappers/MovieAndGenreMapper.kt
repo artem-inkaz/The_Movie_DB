@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.core.base.MapperDomain
-import ru.androidschool.intensiv.data.storage.entities.MovieGenreEntity as InData
+import ru.androidschool.intensiv.core.storage.entities.MovieGenreEntity as InData
 import ru.androidschool.intensiv.data.vo.MovieGenre as OutData
 
 class MovieAndGenreMapper : MapperDomain.Base<InData, OutData> {
