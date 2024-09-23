@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.mappers
 
 import ru.androidschool.intensiv.core.base.MapperDomain
-import ru.androidschool.intensiv.data.storage.entities.MovieEntity as InStorageMovie
+import ru.androidschool.intensiv.core.storage.entities.MovieEntity as InStorageMovie
 import ru.androidschool.intensiv.data.vo.MovieLocal as OutMovie
 
 class MovieStorageMapper : MapperDomain.Base<InStorageMovie, OutMovie> {

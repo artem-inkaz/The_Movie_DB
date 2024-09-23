@@ -9,11 +9,6 @@ plugins {
 
 //apply from: "../ktlint.gradle"
 
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-
 android {
     defaultConfig {
         applicationId "ru.androidschool.intensiv"
@@ -24,8 +19,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
-        buildConfigField 'String', 'ACCESS_TOKEN_API', keystoreProperties['ACCESS_TOKEN_API']
     }
     room {
         schemaDirectory "$projectDir/schemas"
@@ -33,14 +26,10 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
-            buildConfigField "String", "BASE_IMAGE_URL", "\"https://image.tmdb.org/t/p/w300\""
         }
         release {
             testCoverageEnabled true
             minifyEnabled false
-            buildConfigField "String", "BASE_URL", "\"https://api.themoviedb.org/3/\""
-            buildConfigField "String", "BASE_IMAGE_URL", "\"https://image.tmdb.org/t/p/w300\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -65,6 +54,9 @@ android {
 }
 
 dependencies {
+    implementation project(':core:network')
+    implementation project(':core:storage')
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$supportLibVersion"

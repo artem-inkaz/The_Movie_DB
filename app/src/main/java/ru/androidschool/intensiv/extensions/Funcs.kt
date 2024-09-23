@@ -7,16 +7,6 @@ import ru.androidschool.utils.Constants.VOTEAVERAGE
 import java.util.Calendar
 import java.util.Locale
 
-// Current date
-val calendar = Calendar.getInstance()
-val currentYear = calendar.get(Calendar.YEAR)
-
-fun getLanguage() = Locale.getDefault().toLanguageTag()
-
-fun voteAverage(voteAverage: Double): Float {
-    return voteAverage.div(VOTEAVERAGE).toFloat()
-}
-
 fun getMoviesGroupList(
     title: String,
     results: List<MovieLocal>?,

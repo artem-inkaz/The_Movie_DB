@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Module
 class UseCaseModule {
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideFeedUseCase(
         nowPlayingMovie: MovieNowPlayingNetworkDataSource,
@@ -27,7 +27,7 @@ class UseCaseModule {
         return FeedUseCase(nowPlayingMovie, popularMovie, upCommingMovie)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieGenreUseCase(
         repository: MovieGenreRepository
@@ -35,7 +35,7 @@ class UseCaseModule {
         return MovieGenreUseCase(repository)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieStorageUseCase(
         repository: MovieStorageRepository
@@ -43,7 +43,7 @@ class UseCaseModule {
         return MovieStorageUseCase(repository)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideTvShowsUseCase(
         repository: TvShowsRepository

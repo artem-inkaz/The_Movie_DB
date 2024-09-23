@@ -17,19 +17,18 @@ import ru.androidschool.intensiv.data.repositoryimpl.MovieActorRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.MovieGenreRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.MovieRepositoryImpl
 import ru.androidschool.intensiv.data.repositoryimpl.TvShowsRepositoryImpl
-import ru.androidschool.intensiv.data.storage.dao.ActorDao
-import ru.androidschool.intensiv.data.storage.dao.GenreDao
-import ru.androidschool.intensiv.data.storage.dao.MovieActorDao
-import ru.androidschool.intensiv.data.storage.dao.MovieDao
-import ru.androidschool.intensiv.data.storage.dao.MovieGenreDao
-import ru.androidschool.intensiv.data.storage.dao.TvShowsDao
+import ru.androidschool.intensiv.core.storage.dao.ActorDao
+import ru.androidschool.intensiv.core.storage.dao.GenreDao
+import ru.androidschool.intensiv.core.storage.dao.MovieActorDao
+import ru.androidschool.intensiv.core.storage.dao.MovieDao
+import ru.androidschool.intensiv.core.storage.dao.MovieGenreDao
+import ru.androidschool.intensiv.core.storage.dao.TvShowsDao
 import ru.androidschool.intensiv.domain.datasource.TvShowsStorageRepository
-import javax.inject.Singleton
 
 @Module
 class StorageRepositoryModule {
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideActorStorageRepository(
         dao: ActorDao,
@@ -38,7 +37,7 @@ class StorageRepositoryModule {
         return ActorStorageRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideGenreStorageRepository(
         dao: GenreDao,
@@ -47,7 +46,7 @@ class StorageRepositoryModule {
         return GenreStorageRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieStorageRepository(
         dao: MovieDao,
@@ -56,7 +55,7 @@ class StorageRepositoryModule {
         return MovieStorageRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideTvShowsStorageRepositoryImpl(
         dao: TvShowsDao,
@@ -65,7 +64,7 @@ class StorageRepositoryModule {
         return TvShowsStorageRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieActorRepositoryImpl(
         dao: MovieActorDao,
@@ -74,7 +73,7 @@ class StorageRepositoryModule {
         return MovieActorRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieGenreRepositoryImpl(
         dao: MovieGenreDao,
@@ -83,7 +82,7 @@ class StorageRepositoryModule {
         return MovieGenreRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieRepositoryImpl(
         dao: MovieDao,
@@ -92,7 +91,7 @@ class StorageRepositoryModule {
         return MovieRepositoryImpl(dao, mapper)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideTvShowsRepositoryImpl(
         api: TvShowsDataSource,

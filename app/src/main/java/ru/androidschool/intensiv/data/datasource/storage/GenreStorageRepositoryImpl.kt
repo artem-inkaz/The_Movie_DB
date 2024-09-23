@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.GenreMapper
-import ru.androidschool.intensiv.data.storage.dao.GenreDao
+import ru.androidschool.intensiv.core.storage.dao.GenreDao
 import ru.androidschool.intensiv.data.vo.Genre
 import ru.androidschool.intensiv.domain.datasource.GenreStorageRepository
 import javax.inject.Inject

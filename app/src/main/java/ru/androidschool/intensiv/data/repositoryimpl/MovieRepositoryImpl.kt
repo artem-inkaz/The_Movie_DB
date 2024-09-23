@@ -2,7 +2,7 @@ package ru.androidschool.intensiv.data.repositoryimpl
 
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.MovieStorageMapper
-import ru.androidschool.intensiv.data.storage.dao.MovieDao
+import ru.androidschool.intensiv.core.storage.dao.MovieDao
 import ru.androidschool.intensiv.data.vo.MovieLocal
 import ru.androidschool.intensiv.domain.repository.MovieRepository
 import javax.inject.Inject

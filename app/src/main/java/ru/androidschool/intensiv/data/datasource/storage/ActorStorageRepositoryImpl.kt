@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.ActorMapper
-import ru.androidschool.intensiv.data.storage.dao.ActorDao
+import ru.androidschool.intensiv.core.storage.dao.ActorDao
 import ru.androidschool.intensiv.data.vo.Actor
 import ru.androidschool.intensiv.domain.datasource.ActorStorageRepository
 import javax.inject.Inject

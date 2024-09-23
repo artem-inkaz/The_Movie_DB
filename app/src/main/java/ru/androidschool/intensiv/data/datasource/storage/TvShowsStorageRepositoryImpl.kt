@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.androidschool.intensiv.data.mappers.TvShowsStorageMapper
-import ru.androidschool.intensiv.data.storage.dao.TvShowsDao
+import ru.androidschool.intensiv.core.storage.dao.TvShowsDao
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
 import ru.androidschool.intensiv.domain.datasource.TvShowsStorageRepository
 import javax.inject.Inject

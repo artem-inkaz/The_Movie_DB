@@ -32,6 +32,7 @@ task clean(type: Delete) {
 }
 
 ext {
+    coreKtxVersion = '1.13.1'
     materialVersion = '1.11.0'
     navigationVersion = '2.7.6'
     constraintLayoutVersion = '2.1.4'

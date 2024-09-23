@@ -2,6 +2,7 @@ package ru.androidschool.intensiv.di
 
 import dagger.Module
 import dagger.Provides
+import ru.androidschool.intensiv.core.network.MovieApiInterface
 import ru.androidschool.intensiv.data.datasource.api.actor.ActorsNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieNowPlayingNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.movie.MoviePopularNetworkDataSource
@@ -9,48 +10,47 @@ import ru.androidschool.intensiv.data.datasource.api.movie.MovieUpCommingNetwork
 import ru.androidschool.intensiv.data.datasource.api.moviedetail.MovieDetailNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.search.SearchMovieNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.tvshows.TvShowsNetworkDataSource
-import ru.androidschool.intensiv.data.network.MovieApiInterface
 import javax.inject.Singleton
 
 @Module
 class DataSourceModule {
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideActorsDataSource(apiClient: MovieApiInterface): ActorsNetworkDataSource {
         return ActorsNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideMovieDetailDataSource(apiClient: MovieApiInterface): MovieDetailNetworkDataSource {
         return MovieDetailNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideNowPlayingMovieDataSource(apiClient: MovieApiInterface): MovieNowPlayingNetworkDataSource {
         return MovieNowPlayingNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun providePopularMovieDataSource(apiClient: MovieApiInterface): MoviePopularNetworkDataSource {
         return MoviePopularNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideUpCommingMovieDataSource(apiClient: MovieApiInterface): MovieUpCommingNetworkDataSource {
         return MovieUpCommingNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideSearchMovieDataSource(apiClient: MovieApiInterface): SearchMovieNetworkDataSource {
         return SearchMovieNetworkDataSource(apiClient)
     }
 
-    @Singleton
+    @ApplicationScope
     @Provides
     fun provideTvShowsDataSource(apiClient: MovieApiInterface): TvShowsNetworkDataSource {
         return TvShowsNetworkDataSource(apiClient)

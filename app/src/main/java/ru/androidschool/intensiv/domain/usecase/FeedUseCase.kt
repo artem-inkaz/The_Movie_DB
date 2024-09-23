@@ -5,7 +5,7 @@ import io.reactivex.functions.Function3
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieNowPlayingNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.movie.MoviePopularNetworkDataSource
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieUpCommingNetworkDataSource
-import ru.androidschool.intensiv.data.dto.movies.Movie
+import ru.androidschool.intensiv.core.network.dto.movies.Movie
 import ru.androidschool.intensiv.extensions.applySchedulers
 import ru.androidschool.intensiv.presentation.feed.GroupFilms
 import javax.inject.Inject
