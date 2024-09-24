@@ -10,7 +10,7 @@ class ActorMapper : MapperDomain.Base<InActorStorage, OutActor> {
         InActorStorage(
             id = id,
             name = name,
-            profilePath = profilePath ?: ""
+            profilePath = profilePath.orEmpty()
         )
     }
 
