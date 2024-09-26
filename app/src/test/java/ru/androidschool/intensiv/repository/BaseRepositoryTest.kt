@@ -1,19 +1,23 @@
 package ru.androidschool.intensiv.repository
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import org.junit.runner.RunWith
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.androidschool.intensiv.core.network.MovieApiInterface
 import java.util.concurrent.TimeUnit
 
-
-open class BaseRepositoryTest {
+@RunWith(AndroidJUnit4::class)
+class BaseRepositoryTestRule: TestWatcher() {
 
     private lateinit var mockWebServer: MockWebServer
 
@@ -24,7 +28,8 @@ open class BaseRepositoryTest {
     private lateinit var loggingInterceptor: HttpLoggingInterceptor
 
     @Before
-    open fun setup() {
+    override fun starting(description: Description?) {
+        super.starting(description)
         mockWebServer = MockWebServer()
         mockWebServer.start()
         loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -42,7 +47,7 @@ open class BaseRepositoryTest {
     }
 
     @After
-    open fun tearDown() {
+    override fun finished(description: Description?) {
         mockWebServer.shutdown()
     }
 

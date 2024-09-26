@@ -1,22 +1,21 @@
 package ru.androidschool.intensiv.repository
 
 import org.junit.Assert
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import ru.androidschool.intensiv.data.datasource.api.movie.MovieNowPlayingNetworkDataSource
 
-class MovieDataSourceTest: BaseRepositoryTest() {
-    private lateinit var movieDataSource: MovieNowPlayingNetworkDataSource
+class MovieDataSourceTest {
 
-    @Before
-    override fun setup() {
-        super.setup()
-        movieDataSource = MovieNowPlayingNetworkDataSource(movieApi)
-    }
+    @get:Rule
+    var testRule = BaseRepositoryTestRule()
+
+    private lateinit var movieDataSource: MovieNowPlayingNetworkDataSource
 
     @Test
     fun `check movie response success`() {
-            val results = movieDataSource.getMovies().test().assertNoErrors()
-            Assert.assertEquals(true, results != null)
+        movieDataSource = MovieNowPlayingNetworkDataSource(testRule.movieApi)
+        val results = movieDataSource.getMovies().test().assertNoErrors()
+        Assert.assertEquals(true, results != null)
     }
 }
