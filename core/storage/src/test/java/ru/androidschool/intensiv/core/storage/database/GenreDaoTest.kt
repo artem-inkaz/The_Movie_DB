@@ -17,55 +17,55 @@ class GenreDaoTest {
 
     // 2
     @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
-    // delete Task
+    var instantGenreExecutorRule = InstantTaskExecutorRule()
+    // delete Genre
 //    @get:Rule
 //    var rxSchedulerRule = RxSchedulerRule()
 
     @Test
-    fun insertTaskTest() {
+    fun insertGenreTest() {
         // 3
-        val testTask = GenreEntity(555, "Test Genre")
+        val testGenre = GenreEntity(555, "Test Genre")
         // 4
-        databaseRule.appDatabase.getGenreDao().add(testTask).test()
+        databaseRule.appDatabase.getGenreDao().add(testGenre).test()
         // 5
-        val taskSize =
+        val genreSize =
             databaseRule.appDatabase.getGenreDao().getAll().test().assertNoErrors().values()
                 .first().size
         // 6
-        assertEquals(taskSize, 1)
+        assertEquals(genreSize, 1)
     }
 
     @Test
-    fun updateTaskTest() {
-        val testTask = GenreEntity(555, "Test Genre 1111")
-        databaseRule.appDatabase.getGenreDao().add(testTask).test()
+    fun updateGenreTest() {
+        val testGenre = GenreEntity(555, "Test Genre 1111")
+        databaseRule.appDatabase.getGenreDao().add(testGenre).test()
         val newTitle = "Test Genre 1112"
-        val updatedTask = testTask.copy(name = newTitle)
+        val updatedGenre = testGenre.copy(name = newTitle)
 
-        databaseRule.appDatabase.getGenreDao().update(updatedTask).test()
+        databaseRule.appDatabase.getGenreDao().update(updatedGenre).test()
 
         val actualTitle = databaseRule.appDatabase.getGenreDao().getAll().test().assertNoErrors().values().first(){ it.first().name == newTitle }.first().name
         assertEquals(newTitle, actualTitle)
     }
 //
     @Test
-    fun deleteTaskTest() {
-        val testTask = GenreEntity(555, "Test Genre 1111")
-        databaseRule.appDatabase.getGenreDao().add(testTask).test()
-        val taskSize = databaseRule.appDatabase.getGenreDao().getAll().test().values().size
-//        assertEquals(taskSize, 1)
+    fun deleteGenreTest() {
+        val testGenre = GenreEntity(555, "Test Genre 1111")
+        databaseRule.appDatabase.getGenreDao().add(testGenre).test()
+        val genreSize = databaseRule.appDatabase.getGenreDao().getAll().test().values().size
+//        assertEquals(genreSize, 1)
 
-        databaseRule.appDatabase.getGenreDao().delete(testTask).test()
-        val newTaskSize = databaseRule.appDatabase.getGenreDao().getAll().test().assertNoErrors().values().size
-        assertEquals(newTaskSize, 0)
+        databaseRule.appDatabase.getGenreDao().delete(testGenre).test()
+        val newGenreSize = databaseRule.appDatabase.getGenreDao().getAll().test().assertNoErrors().values().size
+        assertEquals(newGenreSize, 0)
     }
 
     @Test
-    fun getTaskTest() {
-        val testTask = GenreEntity(5, "Test Genre")
-        databaseRule.appDatabase.getGenreDao().add(testTask).test()
-        val taskSize = databaseRule.appDatabase.getGenreDao().getAll().test().values().first()?.size
-        assertEquals(taskSize, 1)
+    fun getGenreTest() {
+        val testGenre = GenreEntity(5, "Test Genre")
+        databaseRule.appDatabase.getGenreDao().add(testGenre).test()
+        val genreSize = databaseRule.appDatabase.getGenreDao().getAll().test().values().first()?.size
+        assertEquals(genreSize, 1)
     }
 }

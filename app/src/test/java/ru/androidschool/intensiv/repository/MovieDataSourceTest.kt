@@ -15,7 +15,7 @@ class MovieDataSourceTest: BaseRepositoryTest() {
     }
 
     @Test
-    fun `check response success`() {
+    fun `check movie response success`() {
             val results = movieDataSource.getMovies().test().assertNoErrors()
             Assert.assertEquals(true, results != null)
     }

@@ -7,4 +7,4 @@ import java.util.Locale
 val calendar = Calendar.getInstance()
 val currentYear = calendar.get(Calendar.YEAR)
 
-fun getLanguage() = Locale.getDefault().toLanguageTag()
+fun getLanguage() = Locale.getDefault().toLanguageTag().lowercase(Locale.getDefault())

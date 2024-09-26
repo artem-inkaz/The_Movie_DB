@@ -13,12 +13,12 @@ class GenreMapperDtoTest {
     val mapper = GenreMapperDto()
 
     @Test
-    fun `test actor mapper dto success`() {
+    fun `test genre mapper dto success`() {
         assertEquals(mockGenreVo, mapper.toViewObject(mockGenreDto))
     }
 
     @Test
-    fun `test actors mapper dto success`() {
+    fun `test genres mapper dto success`() {
         assertEquals(listOf(mockGenreVo), mapper.toViewObject(listOf( mockGenreDto)))
     }
 }

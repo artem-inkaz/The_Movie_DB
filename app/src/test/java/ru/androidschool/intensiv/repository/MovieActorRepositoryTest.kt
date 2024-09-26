@@ -35,13 +35,13 @@ class MovieActorRepositoryTest {
     }
 
     @Test
-    fun insert() {
-        val testProduct = mockMovieActor
-        testProduct.forEach{
+    fun insertMovieActor() {
+        val testMovieActor = mockMovieActor
+        testMovieActor.forEach{
             repository.add(it).test().awaitTerminalEvent()
         }
 
-       val repoSize = repository.getByMovieId(testProduct[0].movieId.toString()).test().assertNoErrors().values().size
-        assertEquals(repoSize, 1)
+       val movieActorSize = repository.getByMovieId(testMovieActor[0].movieId.toString()).test().assertNoErrors().values().size
+        assertEquals(movieActorSize, 1)
     }
 }
