@@ -15,7 +15,7 @@ data class Cast(
     val order: Int,
     val original_name: String,
     val popularity: Double,
-//    val profile_path: String? = null
+    val profile_path: String? = null
 ){
     @SerializedName("profile_path")
     val profilePath: String? = null
