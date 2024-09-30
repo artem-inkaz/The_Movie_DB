@@ -1,6 +1,11 @@
 package ru.androidschool.intensiv.data.repositoryimpl
 
-import io.reactivex.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import ru.androidschool.intensiv.data.datasource.api.tvshows.TvShowsDataSource
 import ru.androidschool.intensiv.data.mappers.TvShowsMapperDto
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
@@ -13,12 +18,12 @@ class TvShowsRepositoryImpl @Inject constructor(
     private val storage: TvShowsStorageRepository
 ) : TvShowsRepository {
 
-    override fun getAllTvShows(): Observable<List<TvShowsLocal>> =
-        Observable.merge(
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun getAllTvShows(): Flow<List<TvShowsLocal>> =
+        merge(
             storage.getAllTvShows(),
-            api.getPopularTvShows()
+            flowOf(api.getPopularTvShows())
                 .map { response -> response.results.map { TvShowsMapperDto().toViewObject(it) } }
-                .flatMap(storage::insertAll)
-                .toObservable()
+                .flatMapConcat(storage::insertAll)
         )
 }

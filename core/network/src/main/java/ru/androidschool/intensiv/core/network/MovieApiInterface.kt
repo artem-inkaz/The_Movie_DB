@@ -35,10 +35,10 @@ interface MovieApiInterface {
     ): Single<MoviesResponse>
 
     @GET("tv/popular")
-    fun getPopularTvShows(
+    suspend fun getPopularTvShows(
         @Query("language") language: String = getLanguage(),
         @Query("page") page: Int = movieParams.page,
-    ): Single<TvShowsResponse>
+    ): TvShowsResponse
 
     @GET("movie/{movie_id}")
     fun getMovieDetails(

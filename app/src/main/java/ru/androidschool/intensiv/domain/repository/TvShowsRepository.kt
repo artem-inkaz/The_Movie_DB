@@ -1,9 +1,8 @@
 package ru.androidschool.intensiv.domain.repository
 
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import ru.androidschool.intensiv.data.vo.TvShowsLocal
 
 interface TvShowsRepository {
-    fun getAllTvShows(): Observable<List<TvShowsLocal>>
+    suspend fun getAllTvShows(): Flow<List<TvShowsLocal>>
 }

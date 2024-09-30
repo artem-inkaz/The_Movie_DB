@@ -12,7 +12,7 @@ class TvShowsContract {
         fun refresh()
     }
     abstract class Presenter: BaseContract.Presenter<View>() {
-        abstract  fun makeList()
-        abstract  fun refreshList()
+        abstract suspend fun makeList()
+        abstract suspend fun refreshList()
     }
 }
