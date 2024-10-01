@@ -22,7 +22,7 @@ import ru.androidschool.intensiv.core.storage.utils.movieParams
 @Database(
     entities = [MovieEntity::class, ActorEntity::class, GenreEntity::class,
         MovieActorEntity::class, MovieGenreEntity::class, TvShowsEntity::class],
-    version = 5,
+    version = 4,
     exportSchema = false
 )
 abstract class MoviesDataBase : RoomDatabase() {
