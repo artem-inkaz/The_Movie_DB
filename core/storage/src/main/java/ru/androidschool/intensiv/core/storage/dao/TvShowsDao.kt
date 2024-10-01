@@ -7,32 +7,30 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import ru.androidschool.intensiv.core.storage.entities.TvShowsEntity
 
 @Dao
 interface TvShowsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun create(movie: TvShowsEntity): Completable
+    suspend fun create(movie: TvShowsEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(movie: List<TvShowsEntity>): Completable
+    suspend fun insertAll(movie: List<TvShowsEntity>)
 
     @Update
-    fun update(movie: TvShowsEntity): Completable
+    suspend fun update(movie: TvShowsEntity)
 
     @Delete
-    fun delete(movie: TvShowsEntity)
+    suspend fun delete(movie: TvShowsEntity)
 
     @Transaction
     @Query("DELETE FROM ${TvShowsEntity.TABLE_NAME}")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM ${TvShowsEntity.TABLE_NAME} ORDER BY ${TvShowsEntity.TV_SHOWS_ID} DESC")
-    fun getAllTvShows(): Observable<List<TvShowsEntity>>
+    fun getAllTvShows(): Flow<List<TvShowsEntity>>
 
     @Query(
         """
@@ -42,15 +40,17 @@ interface TvShowsDao {
         LIMIT 1
         """
     )
-    fun getById(id: Int): Observable<TvShowsEntity>
+    fun getById(id: Int): Flow<TvShowsEntity>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
             SELECT * 
             FROM ${TvShowsEntity.TABLE_NAME} 
             WHERE ${TvShowsEntity.NAME} 
             LIKE '%' || :searchQuery || '%' 
             ORDER BY ${TvShowsEntity.NAME} DESC
-            """)
-    fun search(searchQuery: String): Single<List<TvShowsEntity>>
+            """
+    )
+    suspend fun search(searchQuery: String): List<TvShowsEntity>
 }

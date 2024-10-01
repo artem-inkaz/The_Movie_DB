@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.appComponent
 import ru.androidschool.intensiv.core.base.BaseFragment
@@ -54,7 +56,9 @@ class TvShowsFragment : BaseFragment<TvShowsFragmentBinding>(), TvShowsContract.
         // Добавляем в presenter имплементацию FeedView
         presenter.attach(this)
         // Вызываем метод presenter для получения фильмов
-        presenter.makeList()
+        lifecycleScope.launch {
+            presenter.makeList()
+        }
     }
 
     private fun openShowDest(showDest: TvShowsLocal) {
