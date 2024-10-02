@@ -5,6 +5,7 @@ plugins {
     id("kotlinx-serialization")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.google.firebase.crashlytics")
 }
 
 //apply from: "../ktlint.gradle"
@@ -142,5 +143,11 @@ dependencies {
     //Dagger2
     implementation("com.google.dagger:dagger:$rootProject.daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$rootProject.daggerVersion")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+
+    // Crashlytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
 }
