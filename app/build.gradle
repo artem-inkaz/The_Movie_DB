@@ -5,6 +5,7 @@ plugins {
     id("kotlinx-serialization")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.google.firebase.crashlytics")
 }
 
 //apply from: "../ktlint.gradle"
@@ -20,15 +21,35 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
+    signingConfigs {
+        release {
+            def keystoreProperties = new Properties()
+            def keystorePropsFile = file("keystore/themoviedb")
+
+            if (keystorePropsFile.exists()) {
+                file("keystore/themoviedb").withInputStream { keystoreProperties.load(it) }
+                storeFile file("$keystoreProperties.storeFile")
+                storePassword "$keystoreProperties.storePassword"
+                keyAlias "$keystoreProperties.keyAlias"
+                keyPassword "$keystoreProperties.keyPassword"
+            } else {
+                storeFile file("keystore/themoviedb")
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('RELEASE_SIGN_KEY_ALIAS')
+                keyPassword System.getenv('RELEASE_SIGN_KEY_PASSWORD')
+            }
+        }
+    }
     room {
         schemaDirectory "$projectDir/schemas"
     }
     buildTypes {
         debug {
-//            testCoverageEnabled true
+            testCoverageEnabled true
             minifyEnabled false
         }
         release {
+            signingConfig signingConfigs.release
             testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -40,12 +61,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -142,5 +163,11 @@ dependencies {
     //Dagger2
     implementation("com.google.dagger:dagger:$rootProject.daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$rootProject.daggerVersion")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+
+    // Crashlytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
 }
